@@ -1,0 +1,14 @@
+services:
+  news-hub:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "3001:3000"
+    environment:
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - DATABASE_URL=/app/data/news.db
+      - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
+      - NEXT_PUBLIC_X_HANDLE=${NEXT_PUBLIC_X_HANDLE}
+    volumes:
+      # Persist the SQLite database across container restarts
+      - ./data:/app/data
