@@ -27,3 +27,5 @@ Thumbs.db
 *.swp
 *.log
 *.tsbuildinfo
+*.db-shm
+*.db-wal
