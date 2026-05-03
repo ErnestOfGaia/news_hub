@@ -1,10 +1,12 @@
+import { requireAdmin } from '@/lib/auth'
+
 // Admin layout — enforces password session check for all /admin/* routes
 // Jules: implement session check in Issue #7
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  await requireAdmin()
   return (
-    <div>
-      {/* Session check middleware added in Issue #7 */}
+    <div className="min-h-screen bg-white">
       {children}
     </div>
   )
