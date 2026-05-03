@@ -88,6 +88,16 @@ Each issue is scoped to 2–4 hours of focused work. Stay within scope — do no
 
 **Do not install packages not in `package.json` without noting why in the PR.**
 
+### Branch and PR Rules
+
+Jules creates one branch per task automatically. To keep the repo clean:
+
+- **Before starting**: Check open and merged PRs. If a PR for this issue number already exists (open or merged), do not run the task again — comment on the issue explaining the status instead.
+- **PR title**: Use the format `[#N] Short description of what you did` — never use the raw branch name or task ID as the PR title.
+- **Closes reference**: Always include `Closes #N` (the GitHub issue number) in the PR description body, where N is the GitHub issue number.
+- **No scaffold comments**: Remove any `// Jules: implement...` or `{/* Implemented in Issue #N */}` placeholder comments before opening your PR. Do not add new comments that reference issue or PR numbers — comments should explain *why*, not *what ticket*.
+- **No empty PRs**: Do not open a PR with 0 files changed. If your task produced no changes, comment on the issue explaining why instead.
+
 ---
 
 ## Contact
