@@ -1,0 +1,81 @@
+## Context
+
+Issue #13 — Docker production config. Builds on Issue #1. Deploys to Hostinger VPS (Ubuntu 24.04) using Docker + nginx. Ernest runs `docker compose up -d --build`. SQLite must persist across container restarts via volume mount.
+
+## Task
+
+Finalize Docker + nginx production configuration. Verify `next.config.ts` has both required options.
+
+## Acceptance Criteria
+
+- [ ] `npm run build` succeeds
+- [ ] `Dockerfile` uses multi-stage build (deps → builder → runner) with node:22-alpine
+- [ ] `docker-compose.yml` maps host port 3001 → container 3000, mounts `./data:/app/data`
+- [ ] SQLite at `/app/data/news.db` persists when container restarts
+- [ ] `nginx.conf` proxies `news.ernestofgaia.xyz` → `localhost:3001` with standard proxy headers
+- [ ] `next.config.ts` has `output: 'standalone'` AND `serverExternalPackages: ['better-sqlite3']`
+- [ ] `npm run typecheck` passes
+
+## Files to Modify
+
+`next.config.ts`, `Dockerfile`, `docker-compose.yml`, `nginx.conf`
+
+## Technical Notes
+
+**next.config.ts — must have both:**
+```typescript
+const nextConfig: NextConfig = {
+  output: 'standalone',
+  serverExternalPackages: ['better-sqlite3'],
+}
+```
+
+**Dockerfile:**
+```dockerfile
+FROM node:22-alpine AS deps
+WORKDIR /app
+COPY package.json package-lock.json* ./
+RUN npm ci
+
+FROM node:22-alpine AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+RUN npm run build
+
+FROM node:22-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nextjs
+COPY --from=builder /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+RUN mkdir -p /app/data && chown nextjs:nodejs /app/data
+USER nextjs
+EXPOSE 3000
+ENV PORT=3000 HOSTNAME="0.0.0.0"
+CMD ["node", "server.js"]
+```
+
+**Note on native module:** If `npm ci` fails in Alpine due to better-sqlite3, add `RUN apk add --no-cache python3 make g++` before `npm ci` in the deps stage. Note this in the PR description if you add it.
+
+**docker-compose.yml:**
+```yaml
+services:
+  news-hub:
+    build: .
+    restart: unless-stopped
+    ports: ["3001:3000"]
+    environment:
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - DATABASE_URL=/app/data/news.db
+      - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
+      - NEXT_PUBLIC_X_HANDLE=${NEXT_PUBLIC_X_HANDLE}
+    volumes: ["./data:/app/data"]
+```
+
+**nginx.conf:** Proxy to `localhost:3001`. Headers: `Host $host`, `X-Real-IP $remote_addr`, `X-Forwarded-For $proxy_add_x_forwarded_for`, `X-Forwarded-Proto $scheme`. TLS: certs at `/etc/letsencrypt/live/news.ernestofgaia.xyz/`.
+
+## Out of Scope
+
+CI/CD pipeline, Certbot configuration, VPS provisioning.

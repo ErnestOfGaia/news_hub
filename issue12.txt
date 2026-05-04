@@ -1,0 +1,66 @@
+## Context
+
+Issue #11 — SEO. The site is fully public so Google indexing matters. Adds proper metadata, OG tags, robots.txt, and a dynamic sitemap. Builds on Issues #1 and #2.
+
+## Task
+
+Add SEO metadata to layout and article pages; generate robots.txt and sitemap.xml.
+
+## Acceptance Criteria
+
+- [ ] Root `layout.tsx` has default metadata (title, description, OG, robots: index+follow)
+- [ ] Article pages override title and description via `generateMetadata`
+- [ ] `GET /robots.txt` returns valid robots.txt allowing all crawlers
+- [ ] `GET /sitemap.xml` returns valid sitemap with all published free articles
+- [ ] OG `metadataBase` uses `NEXT_PUBLIC_SITE_URL`
+- [ ] `npm run typecheck` passes
+
+## Files to Create or Modify
+
+**Create:** `src/app/robots.ts`, `src/app/sitemap.ts`
+**Modify:** `src/app/layout.tsx`
+
+## Technical Notes
+
+**src/app/robots.ts:**
+```typescript
+import type { MetadataRoute } from 'next'
+export default function robots(): MetadataRoute.Robots {
+  return {
+    rules: { userAgent: '*', allow: '/' },
+    sitemap: `${process.env.NEXT_PUBLIC_SITE_URL}/sitemap.xml`,
+  }
+}
+```
+
+**src/app/sitemap.ts:**
+```typescript
+import type { MetadataRoute } from 'next'
+import { getDb } from '@/lib/db'
+
+export default function sitemap(): MetadataRoute.Sitemap {
+  const db = getDb()
+  const articles = db.prepare(
+    `SELECT slug, updated_at FROM content WHERE published=1 AND tier='free' AND type='article' ORDER BY created_at DESC`
+  ).all() as { slug: string; updated_at: string }[]
+  const base = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://news.ernestofgaia.xyz'
+  return [
+    { url: base, lastModified: new Date(), changeFrequency: 'daily', priority: 1 },
+    { url: `${base}/about`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
+    ...articles.map(a => ({ url: `${base}/articles/${a.slug}`, lastModified: new Date(a.updated_at), changeFrequency: 'weekly' as const, priority: 0.8 })),
+  ]
+}
+```
+
+**layout.tsx default metadata (update from Issue #1):**
+- `metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://news.ernestofgaia.xyz')`
+- `title.default: 'Ernest of Gaia — Build Logs & Trade Notes'`
+- `title.template: '%s | Ernest of Gaia'`
+- `robots: { index: true, follow: true }`
+- `openGraph: { siteName: 'Ernest of Gaia News Hub', locale: 'en_US', type: 'website' }`
+
+Note: Posts don't have individual pages so they won't appear in the sitemap — only articles do.
+
+## Out of Scope
+
+OG images, Twitter card metadata, JSON-LD structured data.
