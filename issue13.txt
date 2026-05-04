@@ -1,0 +1,54 @@
+## Context
+
+Issue #12 — RSS feed. Simple distribution for readers who use feed readers. Builds on Issues #1 and #2. Single route at `/rss.xml`.
+
+## Task
+
+Implement an RSS 2.0 feed of all published free content.
+
+## Acceptance Criteria
+
+- [ ] `GET /rss.xml` returns valid RSS 2.0 XML
+- [ ] Response `Content-Type: application/rss+xml; charset=utf-8`
+- [ ] Includes all published free content, newest first, max 50 items
+- [ ] Articles link to `/articles/[slug]`; posts link to `/` (no individual pages for posts)
+- [ ] Each item has: `<title>`, `<link>`, `<description>`, `<pubDate>`, `<guid>`
+- [ ] `npm run typecheck` passes
+
+## Files to Create
+
+- `src/app/rss.xml/route.ts`
+
+## Technical Notes
+
+```typescript
+import { NextResponse } from 'next/server'
+import { getDb } from '@/lib/db'
+
+const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://news.ernestofgaia.xyz'
+
+export async function GET() {
+  const db = getDb()
+  const items = db.prepare(
+    `SELECT slug, title, excerpt, body, type, created_at FROM content WHERE published=1 AND tier='free' ORDER BY created_at DESC LIMIT 50`
+  ).all() as { slug: string; title: string; excerpt: string | null; body: string; type: string; created_at: string }[]
+
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"><channel>
+<title>Ernest of Gaia — Build Logs &amp; Trade Notes</title>
+<description>Build logs, trade insights, and process notes from an Oregon coast tradesperson who teaches AI tools.</description>
+<link>${BASE}</link><language>en-us</language>
+${items.map(item => {
+  const link = item.type === 'article' ? `${BASE}/articles/${item.slug}` : BASE
+  const desc = item.excerpt ?? item.body.slice(0, 200) + '…'
+  return `<item><title><![CDATA[${item.title}]]></title><link>${link}</link><description><![CDATA[${desc}]]></description><pubDate>${new Date(item.created_at).toUTCString()}</pubDate><guid>${link}</guid></item>`
+}).join('\n')}
+</channel></rss>`
+
+  return new NextResponse(xml, { headers: { 'Content-Type': 'application/rss+xml; charset=utf-8' } })
+}
+```
+
+## Out of Scope
+
+Atom feed, podcast enclosures, per-series feeds.
