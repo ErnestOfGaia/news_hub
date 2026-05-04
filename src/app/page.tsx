@@ -14,23 +14,27 @@ export default function HomePage() {
 
   if (items.length === 0) {
     return (
-      <main className="max-w-3xl mx-auto px-4 py-12">
-        <p className="text-stone-500 italic">Nothing published yet — check back soon.</p>
-      </main>
+      <div className="max-w-3xl mx-auto px-4 sm:px-6">
+        <main className="py-12">
+          <p className="text-stone-500 italic">Nothing published yet — check back soon.</p>
+        </main>
+      </div>
     )
   }
 
   return (
-    <main className="max-w-3xl mx-auto px-4 py-12 flex flex-col gap-8">
-      {items.map((item) => {
+    <div className="max-w-3xl mx-auto px-4 sm:px-6">
+      <main className="py-12 flex flex-col gap-8">
+        {items.map((item) => {
         if (item.type === 'post') {
           return <PostCard key={item.id} post={item} />
         }
         if (item.type === 'article') {
           return <ArticleCard key={item.id} article={item} />
         }
-        return null
-      })}
-    </main>
+          return null
+        })}
+      </main>
+    </div>
   )
 }

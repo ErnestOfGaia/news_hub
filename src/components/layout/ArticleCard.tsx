@@ -18,13 +18,13 @@ export default function ArticleCard({ article }: ArticleCardProps) {
   const seriesLabel = getSeriesLabel(article.series)
 
   return (
-    <article className="border border-stone-200 p-6 rounded-lg bg-white shadow-sm flex flex-col gap-3">
+    <article className="border border-stone-200 p-5 bg-white flex flex-col gap-3">
       {seriesLabel && (
-        <span className="text-xs font-semibold uppercase tracking-wider text-stone-500">
+        <span className="text-xs font-semibold uppercase tracking-widest text-blue-700">
           {seriesLabel}
         </span>
       )}
-      <h2 className="text-xl font-bold text-stone-900">{article.title}</h2>
+      <h2 className="text-2xl font-newsreader font-medium text-stone-900">{article.title}</h2>
       {article.excerpt && (
         <p className="text-stone-700 leading-relaxed">{article.excerpt}</p>
       )}
@@ -34,7 +34,7 @@ export default function ArticleCard({ article }: ArticleCardProps) {
         </time>
         <Link
           href={`/articles/${article.slug}`}
-          className="text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors"
+          className="text-sm font-medium text-blue-700 hover:text-blue-900 transition-colors"
         >
           Read article →
         </Link>
