@@ -1,3 +1,5 @@
+import { ContentSeries } from '@/types'
+
 export function slugify(text: string): string {
   return text
     .toLowerCase()
@@ -18,4 +20,11 @@ export function formatDate(dateStr: string): string {
 export function truncate(text: string, maxLength: number): string {
   if (text.length <= maxLength) return text
   return text.slice(0, maxLength).trimEnd() + '…'
+}
+
+export function getSeriesLabel(series: ContentSeries): string | null {
+  if (series === 'build-log') return 'The Build Log'
+  if (series === 'new-news') return 'New News'
+  if (series === 'jules-experience') return 'The Jules Experience'
+  return null
 }

@@ -1,16 +1,9 @@
 import React from 'react'
 import { Content } from '@/types'
-import { formatDate } from '@/lib/utils'
+import { formatDate, getSeriesLabel } from '@/lib/utils'
 
 export type PostCardProps = {
   post: Content
-}
-
-function getSeriesLabel(series: Content['series']): string | null {
-  if (series === 'build-log') return 'The Build Log'
-  if (series === 'new-news') return 'New News'
-  if (series === 'jules-experience') return 'The Jules Experience'
-  return null
 }
 
 export default function PostCard({ post }: PostCardProps) {
