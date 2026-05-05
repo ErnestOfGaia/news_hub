@@ -6,7 +6,7 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <main className="max-w-3xl mx-auto px-4 py-12">
+    <main className="py-12">
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h1>About Ernest of Gaia</h1>
 
