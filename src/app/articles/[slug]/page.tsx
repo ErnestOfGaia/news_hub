@@ -36,10 +36,6 @@ export default async function ArticlePage({ params }: Props) {
     notFound()
   }
 
-  const xIntentUrl = `https://x.com/intent/post?text=${encodeURIComponent(
-    `Regarding "${article.title}" by @ErnestOfGaia:\n\n`
-  )}&url=${encodeURIComponent(`${process.env.NEXT_PUBLIC_SITE_URL}/articles/${slug}`)}`
-
   return (
     <main className="max-w-prose mx-auto py-12 px-4 space-y-8">
       <Link
@@ -70,15 +66,15 @@ export default async function ArticlePage({ params }: Props) {
       <footer className="py-8 space-y-4">
         <h3 className="font-serif text-xl font-bold text-stone-900">Questions or thoughts?</h3>
         <p className="text-stone-600">
-          The discussion for this article happens on X. Ernest reads every mention.
+          Connect with Ernest on LinkedIn to discuss this article.
         </p>
         <a
-          href={xIntentUrl}
+          href="https://www.linkedin.com/in/ernestofgaia/"
           target="_blank"
           rel="noopener noreferrer"
           className="inline-block bg-stone-900 text-stone-50 px-6 py-3 rounded-none font-medium hover:bg-stone-800 transition-colors"
         >
-          Ask on X
+          Discuss on LinkedIn
         </a>
       </footer>
     </main>
