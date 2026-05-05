@@ -11,7 +11,7 @@ type Props = {
 
 export default function MarkdownRenderer({ content }: Props) {
   return (
-    <div className="prose prose-stone max-w-none">
+    <div className="prose prose-stone max-w-none prose-pre:bg-stone-100 prose-pre:text-stone-800 prose-pre:border prose-pre:border-stone-200">
       <ReactMarkdown remarkPlugins={[remarkGfm]}>
         {content}
       </ReactMarkdown>

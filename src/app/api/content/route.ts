@@ -5,6 +5,14 @@ import { slugify } from '@/lib/utils'
 import Database from 'better-sqlite3'
 
 function uniqueSlug(db: Database.Database, base: string): string {
+<<<<<<< HEAD
+  let slug = base
+  let n = 2
+  while (db.prepare('SELECT id FROM content WHERE slug = ?').get(slug)) {
+    slug = `${base}-${n++}`
+  }
+  return slug
+=======
   const rows = db
     .prepare('SELECT slug FROM content WHERE slug = ? OR slug LIKE ?')
     .all(base, `${base}-%`) as { slug: string }[]
@@ -20,6 +28,7 @@ function uniqueSlug(db: Database.Database, base: string): string {
     n++
   }
   return `${base}-${n}`
+>>>>>>> origin/main
 }
 
 export async function POST(req: NextRequest) {

@@ -10,13 +10,13 @@ export default function PostCard({ post }: PostCardProps) {
   const seriesLabel = getSeriesLabel(post.series)
 
   return (
-    <article className="border border-stone-200 p-6 rounded-lg bg-white shadow-sm flex flex-col gap-3">
+    <article className="flex flex-col gap-3 py-6">
       {seriesLabel && (
-        <span className="text-xs font-semibold uppercase tracking-wider text-stone-500">
+        <span className="text-xs font-semibold uppercase tracking-widest text-blue-700">
           {seriesLabel}
         </span>
       )}
-      <h2 className="text-xl font-bold text-stone-900">{post.title}</h2>
+      <h2 className="text-lg font-medium text-stone-900">{post.title}</h2>
       <div className="prose prose-stone max-w-none text-stone-700">
         <p className="whitespace-pre-wrap">{post.body}</p>
       </div>
