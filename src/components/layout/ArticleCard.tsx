@@ -1,17 +1,10 @@
 import React from 'react'
 import Link from 'next/link'
 import { ContentSummary } from '@/types'
-import { formatDate } from '@/lib/utils'
+import { formatDate, getSeriesLabel } from '@/lib/utils'
 
 export type ArticleCardProps = {
   article: ContentSummary
-}
-
-function getSeriesLabel(series: ContentSummary['series']): string | null {
-  if (series === 'build-log') return 'The Build Log'
-  if (series === 'new-news') return 'New News'
-  if (series === 'jules-experience') return 'The Jules Experience'
-  return null
 }
 
 export default function ArticleCard({ article }: ArticleCardProps) {
