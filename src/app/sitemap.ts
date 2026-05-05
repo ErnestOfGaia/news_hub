@@ -4,6 +4,8 @@ import { getDb } from '@/lib/db'
 export default function sitemap(): MetadataRoute.Sitemap {
   const db = getDb()
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
   const articles = db.prepare(
     `SELECT slug, updated_at FROM content WHERE published=1 AND tier='free' AND type='article' ORDER BY created_at DESC`
   ).all() as { slug: string; updated_at: string }[]
@@ -11,6 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const base = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://news.ernestofgaia.xyz'
 
 =======
+>>>>>>> origin/main
   const articles = db
     .prepare(
       `SELECT slug, updated_at FROM content WHERE published=1 AND tier='free' AND type='article' ORDER BY created_at DESC`
@@ -26,6 +29,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }))
 
+<<<<<<< HEAD
+=======
+>>>>>>> origin/main
 >>>>>>> origin/main
   return [
     {
@@ -41,6 +47,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.5,
     },
 <<<<<<< HEAD
+    ...articleEntries,
+=======
+<<<<<<< HEAD
     ...articles.map((a) => ({
       url: `${base}/articles/${a.slug}`,
       lastModified: new Date(a.updated_at),
@@ -49,6 +58,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })),
 =======
     ...articleEntries,
+>>>>>>> origin/main
 >>>>>>> origin/main
   ]
 }
