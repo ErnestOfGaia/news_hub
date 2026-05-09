@@ -86,6 +86,23 @@ export default async function EditContentPage({ params }: { params: Promise<{ id
               <option value="build-log">The Build Log</option>
               <option value="new-news">New News</option>
               <option value="jules-experience">The Jules Experience</option>
+              <option value="pull-request">Pull Request</option>
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="character" className="block text-sm font-medium text-stone-700 mb-1">Character</label>
+            <select
+              id="character"
+              name="character"
+              className="w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
+              defaultValue={item.character || ''}
+            >
+              <option value="">—none—</option>
+              <option value="pelican">Pelican</option>
+              <option value="gremlin">Gremlin</option>
+              <option value="zclaude">zClaude</option>
+              <option value="ag">A.G.</option>
             </select>
           </div>
 

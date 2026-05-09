@@ -1,6 +1,7 @@
 export type ContentTier = 'free' | 'premium'
 export type ContentType = 'post' | 'article'
-export type ContentSeries = 'build-log' | 'new-news' | 'jules-experience' | null
+export type ContentCharacter = 'pelican' | 'gremlin' | 'zclaude' | 'ag' | null
+export type ContentSeries = 'build-log' | 'new-news' | 'jules-experience' | 'pull-request' | null
 
 export interface Content {
   id: number
@@ -11,6 +12,8 @@ export interface Content {
   type: ContentType
   tier: ContentTier
   series: ContentSeries
+  character: ContentCharacter
+  comic_panels: string | null
   published: 0 | 1
   x_thread_url: string | null
   created_at: string

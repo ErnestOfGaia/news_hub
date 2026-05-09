@@ -12,7 +12,7 @@ const SERIES_LABELS: Record<string, string> = {
 export default function AdminPage() {
   const db = getDb()
   const items = db.prepare(
-    `SELECT id, slug, title, type, tier, series, published, created_at FROM content ORDER BY created_at DESC`
+    `SELECT id, slug, title, type, tier, series, character, published, created_at FROM content ORDER BY created_at DESC`
   ).all() as ContentSummary[]
 
   return (
@@ -34,6 +34,7 @@ export default function AdminPage() {
               <th className="px-6 py-4 text-sm font-semibold text-stone-900">Title</th>
               <th className="px-6 py-4 text-sm font-semibold text-stone-900">Type</th>
               <th className="px-6 py-4 text-sm font-semibold text-stone-900">Series</th>
+              <th className="px-6 py-4 text-sm font-semibold text-stone-900">Character</th>
               <th className="px-6 py-4 text-sm font-semibold text-stone-900">Status</th>
               <th className="px-6 py-4 text-sm font-semibold text-stone-900">Date</th>
               <th className="px-6 py-4 text-sm font-semibold text-stone-900 text-right">Actions</th>
@@ -50,6 +51,9 @@ export default function AdminPage() {
                 </td>
                 <td className="px-6 py-4 text-sm text-stone-600">
                   {item.series ? SERIES_LABELS[item.series] || '—' : '—'}
+                </td>
+                <td className="px-6 py-4 text-sm text-stone-600 capitalize">
+                  {item.character || '—'}
                 </td>
                 <td className="px-6 py-4 text-sm">
                   {item.published === 1 ? (
