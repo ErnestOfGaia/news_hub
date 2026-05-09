@@ -1,11 +1,10 @@
 import type { Metadata } from 'next'
-import { Inter, Newsreader } from 'next/font/google'
+import { Inter } from 'next/font/google'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
-const newsreader = Newsreader({ subsets: ['latin'], variable: '--font-newsreader', style: ['normal', 'italic'] })
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://news.ernestofgaia.xyz'
 
@@ -29,8 +28,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className={`${inter.variable} ${newsreader.variable} font-sans leading-relaxed`}>
+    <html lang="en" className="dark">
+      <body className={`${inter.variable} font-sans leading-relaxed`}>
         <Header />
         {children}
         <Footer />
