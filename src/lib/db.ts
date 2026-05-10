@@ -41,4 +41,13 @@ function initSchema(db: Database.Database): void {
     );
     -- series: 'build-log' | 'new-news' | null (future series can be added without schema change)
   `)
+
+  const existingColumns = db.prepare("PRAGMA table_info(content)").all() as { name: string }[]
+  const columnNames = existingColumns.map(c => c.name)
+  if (!columnNames.includes('character')) {
+    db.exec("ALTER TABLE content ADD COLUMN character TEXT")
+  }
+  if (!columnNames.includes('comic_panels')) {
+    db.exec("ALTER TABLE content ADD COLUMN comic_panels TEXT")
+  }
 }
