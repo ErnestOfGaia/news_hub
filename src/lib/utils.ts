@@ -26,5 +26,6 @@ export function getSeriesLabel(series: ContentSeries): string | null {
   if (series === 'build-log') return 'The Build Log'
   if (series === 'new-news') return 'New News'
   if (series === 'jules-experience') return 'The Jules Experience'
+  if (series === 'pull-request') return 'Pull Request'
   return null
 }
