@@ -1,6 +1,15 @@
+import { getDb } from '@/lib/db'
+import { ContentSummary } from '@/types'
+import { getSeriesLabel } from '@/lib/utils'
 import CharacterCard from '@/components/ui/CharacterCard'
+import NewsCard from '@/components/ui/NewsCard'
 
 export default function HomePage() {
+  const db = getDb()
+  const latestItems = db.prepare(
+    `SELECT id, slug, title, excerpt, series, character, created_at
+     FROM content WHERE published = 1 AND tier = 'free' ORDER BY created_at DESC LIMIT 8`
+  ).all() as ContentSummary[]
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 flex flex-col gap-12">
 
@@ -81,7 +90,35 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Row 3 — added in #40 */}
+      {/* Row 3 — Latest Transmissions */}
+      <section className="pb-20 md:pb-0">
+        <h2 className="text-label-lg text-nhw-cyan uppercase tracking-widest mb-6">
+          LATEST TRANSMISSIONS ──────────── ((•))
+        </h2>
+        {latestItems.length === 0 ? (
+          <p className="text-label-lg text-nhw-cyan/40 text-center py-12">
+            NO TRANSMISSIONS ON FILE
+          </p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {latestItems.map((item) => {
+              const href = item.character
+                ? `/dispatch/${item.character}/${item.slug}`
+                : `/articles/${item.slug}`
+              return (
+                <NewsCard
+                  key={item.id}
+                  seriesLabel={getSeriesLabel(item.series)}
+                  date={item.created_at}
+                  headline={item.title}
+                  excerpt={item.excerpt}
+                  href={href}
+                />
+              )
+            })}
+          </div>
+        )}
+      </section>
 
     </main>
   )
