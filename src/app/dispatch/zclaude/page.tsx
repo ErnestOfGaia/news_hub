@@ -4,6 +4,8 @@ import { formatDate, getSeriesLabel } from '@/lib/utils'
 import Link from 'next/link'
 import CharacterCard from '@/components/ui/CharacterCard'
 
+export const dynamic = 'force-dynamic'
+
 export default function ZClaudeDispatchPage() {
   const db = getDb()
   const posts = db.prepare(

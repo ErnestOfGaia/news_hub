@@ -5,6 +5,8 @@ import CharacterCard from '@/components/ui/CharacterCard'
 import NewsCard from '@/components/ui/NewsCard'
 import WorldModuleComic from '@/components/ui/WorldModuleComic'
 
+export const dynamic = 'force-dynamic'
+
 export default function HomePage() {
   const db = getDb()
   const latestItems = db.prepare(

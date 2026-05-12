@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { getDb } from '@/lib/db'
 
+export const dynamic = 'force-dynamic'
+
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://news.ernestofgaia.xyz'
 
 export async function GET() {

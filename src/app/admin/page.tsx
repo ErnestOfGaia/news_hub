@@ -3,6 +3,8 @@ import { ContentSummary } from '@/types'
 import Link from 'next/link'
 import { formatDate } from '@/lib/utils'
 
+export const dynamic = 'force-dynamic'
+
 const SERIES_LABELS: Record<string, string> = {
   'build-log': 'The Build Log',
   'new-news': 'New News',
