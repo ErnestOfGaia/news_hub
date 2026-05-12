@@ -61,9 +61,14 @@ export default function AdminPage() {
                       Published
                     </span>
                   ) : (
-                    <span className="bg-stone-100 text-stone-800 text-xs px-2 py-1 rounded-full font-medium">
-                      Draft
-                    </span>
+                    <div className="flex gap-2">
+                      <span className="bg-stone-100 text-stone-800 text-xs px-2 py-1 rounded-full font-medium">
+                        Draft
+                      </span>
+                      <span className="bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded-full font-medium">
+                        Pending Review
+                      </span>
+                    </div>
                   )}
                 </td>
                 <td className="px-6 py-4 text-sm text-stone-600">

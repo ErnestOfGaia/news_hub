@@ -1,3 +1,4 @@
+import type Database from 'better-sqlite3'
 import { ContentSeries } from '@/types'
 
 export function slugify(text: string): string {
@@ -7,6 +8,17 @@ export function slugify(text: string): string {
     .replace(/[^\w\s-]/g, '')
     .replace(/[\s_-]+/g, '-')
     .replace(/^-+|-+$/g, '')
+}
+
+export function uniqueSlug(db: Database.Database, base: string): string {
+  const rows = db
+    .prepare('SELECT slug FROM content WHERE slug = ? OR slug LIKE ?')
+    .all(base, `${base}-%`) as { slug: string }[]
+  const existing = new Set(rows.map((r) => r.slug))
+  if (!existing.has(base)) return base
+  let n = 2
+  while (existing.has(`${base}-${n}`)) n++
+  return `${base}-${n}`
 }
 
 export function formatDate(dateStr: string): string {
