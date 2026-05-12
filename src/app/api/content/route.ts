@@ -1,26 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAdmin } from '@/lib/auth'
 import { getDb } from '@/lib/db'
-import { slugify } from '@/lib/utils'
-import Database from 'better-sqlite3'
-
-function uniqueSlug(db: Database.Database, base: string): string {
-  const rows = db
-    .prepare('SELECT slug FROM content WHERE slug = ? OR slug LIKE ?')
-    .all(base, `${base}-%`) as { slug: string }[]
-
-  const existingSlugs = new Set(rows.map((r) => r.slug))
-
-  if (!existingSlugs.has(base)) {
-    return base
-  }
-
-  let n = 2
-  while (existingSlugs.has(`${base}-${n}`)) {
-    n++
-  }
-  return `${base}-${n}`
-}
+import { slugify, uniqueSlug } from '@/lib/utils'
 
 export async function POST(req: NextRequest) {
   await requireAdmin()
