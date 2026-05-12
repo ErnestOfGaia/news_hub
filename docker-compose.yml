@@ -9,6 +9,7 @@ services:
       - DATABASE_URL=/app/data/news.db
       - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
       - NEXT_PUBLIC_X_HANDLE=${NEXT_PUBLIC_X_HANDLE}
+      - HERMES_API_KEY=${HERMES_API_KEY}
     volumes:
       # Persist the SQLite database across container restarts
       - ./data:/app/data
