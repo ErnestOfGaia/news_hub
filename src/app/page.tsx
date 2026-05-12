@@ -3,6 +3,7 @@ import { ContentSummary } from '@/types'
 import { getSeriesLabel } from '@/lib/utils'
 import CharacterCard from '@/components/ui/CharacterCard'
 import NewsCard from '@/components/ui/NewsCard'
+import WorldModuleComic from '@/components/ui/WorldModuleComic'
 
 export default function HomePage() {
   const db = getDb()
@@ -41,12 +42,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="flex flex-col">
-            <div className="bg-nhw-surface/50 aspect-video w-full" />
-            <span className="text-label-sm text-nhw-cyan/60 uppercase tracking-widest border border-nhw-cyan/30 px-2 py-1 mt-2 inline-block">
-              MODULE: CLICK TO OPEN COMIC BOOK
-            </span>
-          </div>
+          <WorldModuleComic />
         </div>
       </section>
 
