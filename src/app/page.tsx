@@ -4,6 +4,7 @@ import { getSeriesLabel } from '@/lib/utils'
 import CharacterCard from '@/components/ui/CharacterCard'
 import NewsCard from '@/components/ui/NewsCard'
 import WorldModuleComic from '@/components/ui/WorldModuleComic'
+import Image from 'next/image'
 
 export const dynamic = 'force-dynamic'
 
@@ -11,14 +12,26 @@ export default function HomePage() {
   const db = getDb()
   const latestItems = db.prepare(
     `SELECT id, slug, title, excerpt, series, character, created_at
-     FROM content WHERE published = 1 AND tier = 'free' ORDER BY created_at DESC LIMIT 8`
+     FROM content WHERE published = 1 AND tier = 'free' AND character = 'pelican' ORDER BY created_at DESC LIMIT 4`
   ).all() as ContentSummary[]
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 flex flex-col gap-12">
 
+
+
       {/* Row 1 — World Module card */}
-      <section className="border-2 border-nhw-cyan bg-nhw-surface p-6">
-        <div className="flex items-start justify-between mb-6">
+      <section className="relative border-2 border-nhw-cyan overflow-hidden min-h-[400px] sm:min-h-[500px] lg:min-h-[600px] flex flex-col">
+        <Image
+          src="/home-banner.png"
+          alt="Coastal Command Center Banner"
+          fill
+          className="object-cover opacity-100"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-nhw-surface/90 via-nhw-surface/30 to-transparent pointer-events-none" />
+
+        <div className="relative z-10 p-6 flex flex-col flex-1">
+          <div className="flex items-start justify-between mb-6 shrink-0">
           <span className="text-label-sm text-nhw-cyan/60 uppercase tracking-widest">
             MODULE: ABOUT_NEWS_HUB // STATUS: ACTIVE
           </span>
@@ -27,7 +40,7 @@ export default function HomePage() {
           </span>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 flex-1">
           <div className="flex flex-col gap-6 justify-center">
             <p className="text-body-md text-white/70">
               A fictional Coastal Command Center at the edge of the internet. A small crew of bird
@@ -46,6 +59,7 @@ export default function HomePage() {
 
           <WorldModuleComic />
         </div>
+        </div>
       </section>
 
       {/* Row 2 — Character Author section */}
@@ -62,6 +76,7 @@ export default function HomePage() {
               statusLine="MONITORING THE HORIZON"
               description="Warm authority. Reports project updates in mission-briefing format. Owns New News."
               href="/dispatch/pelican"
+              portraitSrc="/pelican-banner.png"
             />
             <CharacterCard
               name="GREMLIN"
@@ -69,6 +84,7 @@ export default function HomePage() {
               statusLine="FIELD REPORT INCOMING"
               description="Chaotic-good. Gets The Build Log, adds snarky commentary, reports to Pelican."
               href="/dispatch/gremlin"
+              portraitSrc="/gremlin-banner.png"
             />
             <CharacterCard
               name="zCLAUDE"
@@ -76,13 +92,15 @@ export default function HomePage() {
               statusLine="RUNNING AT 45°C"
               description="Dry, literal, perpetually exhausted. Publishes PR-style build logs. They/them."
               href="/dispatch/zclaude"
+              portraitSrc="/zclaude-banner.png"
             />
             <CharacterCard
-              name="A.G."
-              role="The Scout"
-              statusLine="SIGNAL PENDING"
-              description="Task runner and scout. Concept stage. They/them."
-              href="/dispatch/ag"
+              name="COMIC STRIPS"
+              role="The Archive"
+              statusLine="AVAILABLE"
+              description="Visual logs and stories from the Coastal Command Center."
+              href="/dispatch/comics"
+              portraitSrc="/comics-banner.png"
             />
           </div>
         </div>

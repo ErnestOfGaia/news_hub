@@ -10,15 +10,14 @@ export default function WorldModuleComic() {
   const [open, setOpen] = useState(false)
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col h-full justify-end items-end">
       <button
         onClick={() => setOpen(true)}
-        className="bg-nhw-surface/50 aspect-video w-full hover:bg-nhw-surface/70 transition-colors cursor-pointer"
+        className="text-label-sm text-nhw-cyan/80 uppercase tracking-widest border border-nhw-cyan/40 bg-nhw-surface/60 backdrop-blur-sm px-4 py-2 hover:border-nhw-cyan hover:bg-nhw-surface/80 hover:text-nhw-cyan transition-all cursor-pointer"
         aria-label="Open comic viewer"
-      />
-      <span className="text-label-sm text-nhw-cyan/60 uppercase tracking-widest border border-nhw-cyan/30 px-2 py-1 mt-2 inline-block hover:border-nhw-cyan/60 transition-colors">
+      >
         MODULE: CLICK TO OPEN COMIC BOOK
-      </span>
+      </button>
 
       {open && (
         <ComicStripViewer

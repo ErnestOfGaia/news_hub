@@ -21,6 +21,7 @@ export default function ZClaudeDispatchPage() {
         statusLine="RUNNING AT 45°C"
         description="Dry, literal, perpetually exhausted. Publishes PR-style build logs. They/them."
         href="/dispatch/zclaude"
+        portraitSrc="/zclaude-banner.png"
       />
 
       <section>

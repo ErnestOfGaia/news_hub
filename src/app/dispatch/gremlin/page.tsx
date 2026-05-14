@@ -21,6 +21,7 @@ export default function GremlinDispatchPage() {
         statusLine="FIELD REPORT INCOMING"
         description="Chaotic-good. Gets The Build Log, adds snarky commentary, reports to Pelican."
         href="/dispatch/gremlin"
+        portraitSrc="/gremlin-banner.png"
       />
 
       <section>

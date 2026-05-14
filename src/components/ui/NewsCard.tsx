@@ -7,9 +7,10 @@ type NewsCardProps = {
   headline: string
   excerpt: string | null
   href: string
+  openInNewTab?: boolean
 }
 
-export default function NewsCard({ seriesLabel, date, headline, excerpt, href }: NewsCardProps) {
+export default function NewsCard({ seriesLabel, date, headline, excerpt, href, openInNewTab }: NewsCardProps) {
   return (
     <article className="bg-nhw-surface border border-nhw-cyan/20 p-4 flex flex-col gap-3">
       <div className="flex items-start justify-between gap-2">
@@ -30,6 +31,7 @@ export default function NewsCard({ seriesLabel, date, headline, excerpt, href }:
       <Link
         href={href}
         className="text-label-sm text-nhw-cyan hover:opacity-70 transition-opacity mt-auto"
+        {...(openInNewTab ? { target: "_blank", rel: "noopener noreferrer" } : {})}
       >
         READ_SIGNAL &gt;
       </Link>

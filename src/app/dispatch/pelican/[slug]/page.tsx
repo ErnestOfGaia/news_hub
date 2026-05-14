@@ -5,6 +5,7 @@ import { formatDate, getSeriesLabel } from '@/lib/utils'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import MarkdownRenderer from '@/components/ui/MarkdownRenderer'
+import Image from 'next/image'
 
 type Props = {
   params: Promise<{ slug: string }>
@@ -43,6 +44,18 @@ export default async function PelicanPostPage({ params }: Props) {
       >
         ← PELICAN&apos;S DISPATCH
       </Link>
+
+      {/* Banner */}
+      <section className="w-full h-48 sm:h-64 lg:h-80 relative overflow-hidden border-2 border-nhw-cyan group">
+        <Image
+          src="/pelican-banner.png"
+          alt="Pelican Banner"
+          fill
+          className="object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-nhw-surface/90 via-transparent to-transparent pointer-events-none" />
+      </section>
 
       <header className="flex flex-col gap-3">
         <div className="flex items-center gap-3">
