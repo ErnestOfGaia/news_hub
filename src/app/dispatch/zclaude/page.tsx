@@ -10,7 +10,7 @@ export default function ZClaudeDispatchPage() {
   const db = getDb()
   const posts = db.prepare(
     `SELECT id, slug, title, excerpt, series, character, created_at
-     FROM content WHERE character = 'zclaude' AND published = 1 ORDER BY created_at DESC`
+     FROM content WHERE character = 'zclaude' AND status = 'published' ORDER BY created_at DESC`
   ).all() as ContentSummary[]
 
   return (

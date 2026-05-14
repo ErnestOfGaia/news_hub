@@ -7,7 +7,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const db = getDb()
   const articles = db
     .prepare(
-      `SELECT slug, updated_at FROM content WHERE published=1 AND tier='free' AND type='article' ORDER BY created_at DESC`
+      `SELECT slug, updated_at FROM content WHERE status='published' AND tier='free' AND type='article' ORDER BY created_at DESC`
     )
     .all() as { slug: string; updated_at: string }[]
 
