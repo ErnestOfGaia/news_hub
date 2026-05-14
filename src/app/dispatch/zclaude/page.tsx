@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { getDb } from '@/lib/db'
 import { ContentSummary } from '@/types'
 import { formatDate, getSeriesLabel } from '@/lib/utils'
@@ -5,6 +6,33 @@ import Link from 'next/link'
 import CharacterCard from '@/components/ui/CharacterCard'
 
 export const dynamic = 'force-dynamic'
+
+const ZCLAUDE_DESCRIPTION =
+  'zClaude — The Terminal. Dry, literal, perpetually exhausted. PR-style build logs from the beige terminal in the control room. They/them.'
+
+export const metadata: Metadata = {
+  title: "zClaude's Dispatch — News Hub World",
+  description: ZCLAUDE_DESCRIPTION,
+  openGraph: {
+    title: "zClaude's Dispatch — News Hub World",
+    description: ZCLAUDE_DESCRIPTION,
+    type: 'website',
+    images: [
+      {
+        url: '/zclaude-banner.png',
+        width: 1200,
+        height: 630,
+        alt: 'zClaude — The Terminal',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "zClaude's Dispatch — News Hub World",
+    description: ZCLAUDE_DESCRIPTION,
+    images: ['/zclaude-banner.png'],
+  },
+}
 
 export default function ZClaudeDispatchPage() {
   const db = getDb()

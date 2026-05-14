@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { getDb } from '@/lib/db'
 import { ContentSummary } from '@/types'
 import { formatDate, getSeriesLabel } from '@/lib/utils'
@@ -5,6 +6,33 @@ import Link from 'next/link'
 import CharacterCard from '@/components/ui/CharacterCard'
 
 export const dynamic = 'force-dynamic'
+
+const GREMLIN_DESCRIPTION =
+  'Gremlin — The Gremlin. Chaotic-good field reports on The Build Log with snarky commentary, transmitted up the chain to Pelican.'
+
+export const metadata: Metadata = {
+  title: "Gremlin's Dispatch — News Hub World",
+  description: GREMLIN_DESCRIPTION,
+  openGraph: {
+    title: "Gremlin's Dispatch — News Hub World",
+    description: GREMLIN_DESCRIPTION,
+    type: 'website',
+    images: [
+      {
+        url: '/gremlin-banner.png',
+        width: 1200,
+        height: 630,
+        alt: 'Gremlin — Field Reporter',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Gremlin's Dispatch — News Hub World",
+    description: GREMLIN_DESCRIPTION,
+    images: ['/gremlin-banner.png'],
+  },
+}
 
 export default function GremlinDispatchPage() {
   const db = getDb()

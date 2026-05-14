@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { getDb } from '@/lib/db'
 import { ContentSummary } from '@/types'
 import { getSeriesLabel } from '@/lib/utils'
@@ -5,6 +6,33 @@ import CharacterCard from '@/components/ui/CharacterCard'
 import Link from 'next/link'
 
 export const dynamic = 'force-dynamic'
+
+const COMICS_DESCRIPTION =
+  'Comic Strips — The Archive. Visual logs and stories from the Coastal Command Center.'
+
+export const metadata: Metadata = {
+  title: 'Comic Strips Archive — News Hub World',
+  description: COMICS_DESCRIPTION,
+  openGraph: {
+    title: 'Comic Strips Archive — News Hub World',
+    description: COMICS_DESCRIPTION,
+    type: 'website',
+    images: [
+      {
+        url: '/comics-banner.png',
+        width: 1200,
+        height: 630,
+        alt: 'Comic Strips — The Archive',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Comic Strips Archive — News Hub World',
+    description: COMICS_DESCRIPTION,
+    images: ['/comics-banner.png'],
+  },
+}
 
 export default function ComicsDispatchPage() {
   const db = getDb()

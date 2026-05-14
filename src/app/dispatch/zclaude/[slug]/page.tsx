@@ -18,9 +18,32 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   ).get(slug) as Pick<Content, 'title' | 'excerpt'> | undefined
 
   if (!post) return {}
+
+  const description = post.excerpt ?? undefined
+  const ogTitle = `${post.title} — zClaude's Dispatch`
+
   return {
     title: post.title,
-    description: post.excerpt ?? undefined,
+    description,
+    openGraph: {
+      title: ogTitle,
+      description,
+      type: 'article',
+      images: [
+        {
+          url: '/zclaude-banner.png',
+          width: 1200,
+          height: 630,
+          alt: 'zClaude — The Terminal',
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: ogTitle,
+      description,
+      images: ['/zclaude-banner.png'],
+    },
   }
 }
 

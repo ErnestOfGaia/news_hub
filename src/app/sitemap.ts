@@ -3,24 +3,35 @@ import { getDb } from '@/lib/db'
 
 export const dynamic = 'force-dynamic'
 
+type ContentSitemapRow = {
+  slug: string
+  character: 'pelican' | 'gremlin' | 'zclaude' | 'comics' | 'ag' | null
+  updated_at: string
+}
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const db = getDb()
-  const articles = db
+  const rows = db
     .prepare(
-      `SELECT slug, updated_at FROM content WHERE published=1 AND tier='free' AND type='article' ORDER BY created_at DESC`
+      `SELECT slug, character, updated_at
+       FROM content
+       WHERE published = 1 AND tier = 'free'
+       ORDER BY created_at DESC`
     )
-    .all() as { slug: string; updated_at: string }[]
+    .all() as ContentSitemapRow[]
 
   const base = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://news.ernestofgaia.xyz'
 
-  const articleEntries: MetadataRoute.Sitemap = articles.map((a) => ({
-    url: `${base}/articles/${a.slug}`,
-    lastModified: new Date(a.updated_at),
-    changeFrequency: 'weekly',
-    priority: 0.8,
-  }))
+  const contentEntries: MetadataRoute.Sitemap = rows
+    .filter((r) => r.character !== null)
+    .map((r) => ({
+      url: `${base}/dispatch/${r.character}/${r.slug}`,
+      lastModified: new Date(r.updated_at),
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    }))
 
-  return [
+  const staticPages: MetadataRoute.Sitemap = [
     {
       url: base,
       lastModified: new Date(),
@@ -33,6 +44,31 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.5,
     },
-    ...articleEntries,
+    {
+      url: `${base}/dispatch/pelican`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.9,
+    },
+    {
+      url: `${base}/dispatch/gremlin`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.9,
+    },
+    {
+      url: `${base}/dispatch/zclaude`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.9,
+    },
+    {
+      url: `${base}/dispatch/comics`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.7,
+    },
   ]
+
+  return [...staticPages, ...contentEntries]
 }
