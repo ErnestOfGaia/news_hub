@@ -20,13 +20,12 @@ export async function POST(req: NextRequest) {
 
   const db = getDb()
   const slug = uniqueSlug(db, slugify(title))
-  const published = data.get('action') === 'publish' ? 1 : 0
   const series = data.get('series')?.toString() || null
   const character = data.get('character')?.toString() || null
 
   db.prepare(`
-    INSERT INTO content (slug, title, body, excerpt, type, tier, series, character, published, x_thread_url)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO content (slug, title, body, excerpt, type, tier, series, character, x_thread_url)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
   `).run(
     slug,
     title,
@@ -36,7 +35,6 @@ export async function POST(req: NextRequest) {
     data.get('tier') ?? 'free',
     series,
     character,
-    published,
     data.get('x_thread_url')?.toString() || null
   )
 
