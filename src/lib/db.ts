@@ -34,7 +34,6 @@ function initSchema(db: Database.Database): void {
       type          TEXT NOT NULL DEFAULT 'post',
       tier          TEXT NOT NULL DEFAULT 'free',
       series        TEXT,
-      published     INTEGER NOT NULL DEFAULT 0,
       x_thread_url  TEXT,
       created_at    TEXT NOT NULL DEFAULT (datetime('now')),
       updated_at    TEXT NOT NULL DEFAULT (datetime('now'))
@@ -65,8 +64,10 @@ function initSchema(db: Database.Database): void {
     db.exec("ALTER TABLE content ADD COLUMN published_at TEXT")
   }
 
-  // Backfill status from legacy `published` flag. Idempotent: only flips rows
-  // still on the default 'draft' status. Legacy `published` column is dropped
-  // in a follow-up issue (#72).
-  db.prepare("UPDATE content SET status = 'published' WHERE published = 1 AND status = 'draft'").run()
+  // Backfill status from legacy `published` flag, then drop the column.
+  // Both operations are guarded so they only run on DBs that still have it.
+  if (columnNames.includes('published')) {
+    db.prepare("UPDATE content SET status = 'published' WHERE published = 1 AND status = 'draft'").run()
+    db.exec("ALTER TABLE content DROP COLUMN published")
+  }
 }

@@ -95,8 +95,8 @@ export async function POST(req: NextRequest) {
     const slug = uniqueSlug(db, slugify(title))
     const result = db
       .prepare(
-        `INSERT INTO content (slug, title, body, excerpt, type, tier, series, character, comic_panels, published)
-         VALUES (?, ?, ?, ?, 'post', 'free', ?, ?, ?, 0)`
+        `INSERT INTO content (slug, title, body, excerpt, type, tier, series, character, comic_panels)
+         VALUES (?, ?, ?, ?, 'post', 'free', ?, ?, ?)`
       )
       .run(slug, title, body, excerpt, series, character, comicPanels)
     return NextResponse.json({ id: Number(result.lastInsertRowid), slug }, { status: 201 })

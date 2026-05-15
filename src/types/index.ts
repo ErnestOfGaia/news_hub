@@ -21,7 +21,6 @@ export interface Content {
   series: ContentSeries
   character: ContentCharacter
   comic_panels: string | null
-  published: 0 | 1
   status: ContentStatus
   author: ContentAuthor
   review_notes: string | null

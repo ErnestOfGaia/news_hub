@@ -146,21 +146,10 @@ export default async function EditContentPage({ params }: { params: Promise<{ id
           To prevent Enter from triggering Unpublish by default,
           we place a hidden submit button first.
         */}
-        <button type="submit" name="action" value={item.published === 1 ? 'publish' : 'draft'} className="hidden" aria-hidden="true" tabIndex={-1} />
+        <button type="submit" name="action" value="draft" className="hidden" aria-hidden="true" tabIndex={-1} />
 
         <div className="flex items-center justify-between pt-4 border-t border-stone-200">
-          <div>
-            {item.published === 1 && (
-              <button
-                type="submit"
-                name="action"
-                value="unpublish"
-                className="px-4 py-2 text-sm font-medium text-red-600 bg-white border border-red-200 rounded-md shadow-sm hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500"
-              >
-                Unpublish
-              </button>
-            )}
-          </div>
+          <div />
           <div className="flex items-center gap-4">
             <button
               type="submit"

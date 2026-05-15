@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const db = getDb()
   const article = db
-    .prepare('SELECT title, excerpt FROM content WHERE slug = ? AND published = 1')
+    .prepare("SELECT title, excerpt FROM content WHERE slug = ? AND status = 'published'")
     .get(slug) as { title: string; excerpt: string | null } | undefined
 
   if (!article) return {}
@@ -29,7 +29,7 @@ export default async function ArticlePage({ params }: Props) {
   const { slug } = await params
   const db = getDb()
   const article = db
-    .prepare('SELECT * FROM content WHERE slug = ? AND published = 1')
+    .prepare("SELECT * FROM content WHERE slug = ? AND status = 'published'")
     .get(slug) as Content | undefined
 
   if (!article) {
