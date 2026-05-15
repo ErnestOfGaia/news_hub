@@ -16,6 +16,8 @@ export function authorChip(author: ContentAuthor): Chip {
   }
 }
 
+// Character display labels are provisional — naming conventions are still being worked out.
+// Update the labels here when character names are finalized.
 export function voiceChip(character: ContentCharacter): Chip | null {
   switch (character) {
     case 'pelican':
