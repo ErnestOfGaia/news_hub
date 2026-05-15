@@ -50,4 +50,23 @@ function initSchema(db: Database.Database): void {
   if (!columnNames.includes('comic_panels')) {
     db.exec("ALTER TABLE content ADD COLUMN comic_panels TEXT")
   }
+  // status: 'draft' | 'pending_review' | 'changes_requested' | 'approved' | 'published'
+  if (!columnNames.includes('status')) {
+    db.exec("ALTER TABLE content ADD COLUMN status TEXT NOT NULL DEFAULT 'draft'")
+  }
+  // author: 'ernest' | 'trewkat' | 'hermes'
+  if (!columnNames.includes('author')) {
+    db.exec("ALTER TABLE content ADD COLUMN author TEXT NOT NULL DEFAULT 'ernest'")
+  }
+  if (!columnNames.includes('review_notes')) {
+    db.exec("ALTER TABLE content ADD COLUMN review_notes TEXT")
+  }
+  if (!columnNames.includes('published_at')) {
+    db.exec("ALTER TABLE content ADD COLUMN published_at TEXT")
+  }
+
+  // Backfill status from legacy `published` flag. Idempotent: only flips rows
+  // still on the default 'draft' status. Legacy `published` column is dropped
+  // in a follow-up issue (#72).
+  db.prepare("UPDATE content SET status = 'published' WHERE published = 1 AND status = 'draft'").run()
 }

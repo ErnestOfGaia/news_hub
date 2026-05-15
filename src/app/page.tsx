@@ -12,7 +12,7 @@ export default function HomePage() {
   const db = getDb()
   const latestItems = db.prepare(
     `SELECT id, slug, title, excerpt, series, character, created_at
-     FROM content WHERE published = 1 AND tier = 'free' AND character = 'pelican' ORDER BY created_at DESC LIMIT 4`
+     FROM content WHERE status = 'published' AND tier = 'free' AND character = 'pelican' ORDER BY created_at DESC LIMIT 4`
   ).all() as ContentSummary[]
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 flex flex-col gap-12">
