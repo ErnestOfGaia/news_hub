@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const db = getDb()
   const post = db.prepare(
-    `SELECT title, excerpt, comic_panels FROM content WHERE character = 'comics' AND slug = ? AND published = 1`
+    `SELECT title, excerpt, comic_panels FROM content WHERE character = 'comics' AND slug = ? AND status = 'published'`
   ).get(slug) as Pick<Content, 'title' | 'excerpt' | 'comic_panels'> | undefined
 
   if (!post) return {}
@@ -51,7 +51,7 @@ export default async function ComicsPostPage({ params }: Props) {
   const { slug } = await params
   const db = getDb()
   const post = db.prepare(
-    `SELECT * FROM content WHERE character = 'comics' AND slug = ? AND published = 1`
+    `SELECT * FROM content WHERE character = 'comics' AND slug = ? AND status = 'published'`
   ).get(slug) as Content | undefined
 
   if (!post) notFound()

@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const db = getDb()
   const post = db.prepare(
-    `SELECT title, excerpt FROM content WHERE character = 'gremlin' AND slug = ? AND published = 1`
+    `SELECT title, excerpt FROM content WHERE character = 'gremlin' AND slug = ? AND status = 'published'`
   ).get(slug) as Pick<Content, 'title' | 'excerpt'> | undefined
 
   if (!post) return {}
@@ -51,7 +51,7 @@ export default async function GremlinPostPage({ params }: Props) {
   const { slug } = await params
   const db = getDb()
   const post = db.prepare(
-    `SELECT * FROM content WHERE character = 'gremlin' AND slug = ? AND published = 1`
+    `SELECT * FROM content WHERE character = 'gremlin' AND slug = ? AND status = 'published'`
   ).get(slug) as Content | undefined
 
   if (!post) notFound()
