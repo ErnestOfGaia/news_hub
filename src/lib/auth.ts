@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
-import crypto from 'crypto'
+import crypto, { timingSafeEqual } from 'crypto'
+import type { NextRequest } from 'next/server'
 
 const COOKIE_NAME = 'admin_session'
 const MAX_AGE = 60 * 60 * 24 * 7
@@ -25,4 +26,22 @@ export function verifyPassword(input: string): boolean {
 
 export function sessionCookieOptions() {
   return { name: COOKIE_NAME, value: getToken(), httpOnly: true, sameSite: 'strict' as const, maxAge: MAX_AGE, path: '/' }
+}
+
+export function requireHermesKey(req: NextRequest): boolean {
+  const expected = process.env.HERMES_API_KEY
+  if (!expected) return false
+
+  const header = req.headers.get('authorization') ?? ''
+  if (!header.startsWith('Bearer ')) return false
+
+  const presented = header.slice('Bearer '.length)
+  try {
+    const a = Buffer.from(presented)
+    const b = Buffer.from(expected)
+    if (a.length !== b.length) return false
+    return timingSafeEqual(a, b)
+  } catch {
+    return false
+  }
 }
