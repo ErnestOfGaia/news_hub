@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { getDb } from '@/lib/db'
 import { Content } from '@/types'
 import { notFound } from 'next/navigation'
+import { ReviewControls } from '@/components/admin/ReviewControls'
 
 export default async function EditContentPage({ params }: { params: Promise<{ id: string }> }) {
   const id = parseInt((await params).id)
@@ -181,6 +182,13 @@ export default async function EditContentPage({ params }: { params: Promise<{ id
           </div>
         </div>
       </form>
+
+      <ReviewControls
+        id={item.id}
+        currentStatus={item.status}
+        reviewNotes={item.review_notes}
+        author={item.author}
+      />
     </main>
   )
 }
