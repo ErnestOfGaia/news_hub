@@ -21,7 +21,7 @@ export function voiceChip(character: ContentCharacter): Chip | null {
     case 'pelican':
       return { label: 'Pelican', className: 'bg-sky-100 text-sky-800' }
     case 'gremlin':
-      return { label: 'Seagull', className: 'bg-orange-100 text-orange-800' }
+      return { label: 'Gremlin', className: 'bg-orange-100 text-orange-800' }
     case 'zclaude':
       return { label: 'zClaude', className: 'bg-slate-100 text-slate-800' }
     case 'ag':
