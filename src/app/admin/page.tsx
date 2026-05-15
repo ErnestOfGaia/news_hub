@@ -1,100 +1,105 @@
 import { getDb } from '@/lib/db'
-import { ContentSummary } from '@/types'
+import { requireAdmin } from '@/lib/auth'
+import { authorChip, voiceChip } from '@/components/admin/chips'
+import type { ContentStatus, ContentSummary } from '@/types'
 import Link from 'next/link'
 import { formatDate } from '@/lib/utils'
 
 export const dynamic = 'force-dynamic'
 
-const SERIES_LABELS: Record<string, string> = {
-  'build-log': 'The Build Log',
-  'new-news': 'New News',
-  'jules-experience': 'The Jules Experience',
-}
+const COLUMNS: { status: ContentStatus; label: string }[] = [
+  { status: 'draft', label: 'Draft' },
+  { status: 'pending_review', label: 'Pending Review' },
+  { status: 'changes_requested', label: 'Changes Requested' },
+  { status: 'approved', label: 'Approved' },
+  { status: 'published', label: 'Published' },
+]
 
-export default function AdminPage() {
+type KanbanRow = Pick<
+  ContentSummary,
+  'id' | 'title' | 'author' | 'character' | 'status' | 'updated_at'
+>
+
+export default async function AdminPage() {
+  await requireAdmin()
+
   const db = getDb()
-  const items = db.prepare(
-    `SELECT id, slug, title, type, tier, series, character, published, created_at FROM content ORDER BY created_at DESC`
-  ).all() as ContentSummary[]
+  const rows = db
+    .prepare(
+      `SELECT id, title, author, character, status, updated_at
+       FROM content
+       ORDER BY updated_at DESC`
+    )
+    .all() as KanbanRow[]
+
+  const byStatus = Object.fromEntries(
+    COLUMNS.map(({ status }) => [status, rows.filter((r) => r.status === status)])
+  ) as Record<ContentStatus, KanbanRow[]>
 
   return (
-    <main className="max-w-5xl mx-auto p-6">
+    <main className="p-6 min-h-screen bg-stone-50">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-stone-900">Admin Dashboard</h1>
+        <h1 className="text-2xl font-bold text-stone-900">Editorial Board</h1>
         <Link
           href="/admin/new"
           className="bg-stone-900 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-stone-800 transition-colors"
         >
-          New Content
+          + New draft
         </Link>
       </div>
 
-      <div className="bg-white border border-stone-200 rounded-lg shadow-sm overflow-hidden">
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="border-b border-stone-200 bg-stone-50">
-              <th className="px-6 py-4 text-sm font-semibold text-stone-900">Title</th>
-              <th className="px-6 py-4 text-sm font-semibold text-stone-900">Type</th>
-              <th className="px-6 py-4 text-sm font-semibold text-stone-900">Series</th>
-              <th className="px-6 py-4 text-sm font-semibold text-stone-900">Character</th>
-              <th className="px-6 py-4 text-sm font-semibold text-stone-900">Status</th>
-              <th className="px-6 py-4 text-sm font-semibold text-stone-900">Date</th>
-              <th className="px-6 py-4 text-sm font-semibold text-stone-900 text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-stone-200">
-            {items.map((item) => (
-              <tr key={item.id} className="hover:bg-stone-50 transition-colors">
-                <td className="px-6 py-4 text-sm font-medium text-stone-900">
-                  {item.title}
-                </td>
-                <td className="px-6 py-4 text-sm text-stone-600 capitalize">
-                  {item.type}
-                </td>
-                <td className="px-6 py-4 text-sm text-stone-600">
-                  {item.series ? SERIES_LABELS[item.series] || '—' : '—'}
-                </td>
-                <td className="px-6 py-4 text-sm text-stone-600 capitalize">
-                  {item.character || '—'}
-                </td>
-                <td className="px-6 py-4 text-sm">
-                  {item.published === 1 ? (
-                    <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-medium">
-                      Published
-                    </span>
-                  ) : (
-                    <div className="flex gap-2">
-                      <span className="bg-stone-100 text-stone-800 text-xs px-2 py-1 rounded-full font-medium">
-                        Draft
-                      </span>
-                      <span className="bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded-full font-medium">
-                        Pending Review
-                      </span>
-                    </div>
-                  )}
-                </td>
-                <td className="px-6 py-4 text-sm text-stone-600">
-                  {formatDate(item.created_at)}
-                </td>
-                <td className="px-6 py-4 text-sm text-right font-medium">
-                  <Link
-                    href={`/admin/${item.id}`}
-                    className="text-blue-600 hover:text-blue-800 transition-colors"
-                  >
-                    Edit
-                  </Link>
-                </td>
-              </tr>
-            ))}
-            {items.length === 0 && (
-              <tr>
-                <td colSpan={6} className="px-6 py-8 text-center text-stone-500 text-sm">
-                  No content found. Click "New Content" to create some.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+      <div className="flex gap-4 overflow-x-auto pb-4">
+        {COLUMNS.map(({ status, label }) => {
+          const cards = byStatus[status]
+          return (
+            <div
+              key={status}
+              className="flex-none w-64 bg-white border border-stone-200 rounded-lg shadow-sm flex flex-col"
+            >
+              <div className="px-4 py-3 border-b border-stone-200 flex justify-between items-center">
+                <span className="text-sm font-semibold text-stone-700">{label}</span>
+                <span className="text-xs text-stone-400 font-medium">{cards.length}</span>
+              </div>
+
+              <div className="flex flex-col gap-2 p-3 flex-1">
+                {cards.length === 0 ? (
+                  <p className="text-xs text-stone-400 text-center py-6">No items</p>
+                ) : (
+                  cards.map((card) => {
+                    const author = authorChip(card.author)
+                    const voice = voiceChip(card.character)
+                    return (
+                      <Link
+                        key={card.id}
+                        href={`/admin/${card.id}`}
+                        className="block bg-stone-50 border border-stone-200 rounded-md p-3 hover:border-stone-400 hover:bg-white transition-colors"
+                      >
+                        <p className="text-sm font-medium text-stone-900 line-clamp-2 mb-2">
+                          {card.title}
+                        </p>
+                        <div className="flex flex-wrap gap-1 mb-2">
+                          <span
+                            className={`inline-block text-xs px-2 py-0.5 rounded-full font-medium ${author.className}`}
+                          >
+                            {author.label}
+                          </span>
+                          {voice && (
+                            <span
+                              className={`inline-block text-xs px-2 py-0.5 rounded-full font-medium ${voice.className}`}
+                            >
+                              {voice.label}
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-xs text-stone-400">{formatDate(card.updated_at)}</p>
+                      </Link>
+                    )
+                  })
+                )}
+              </div>
+            </div>
+          )
+        })}
       </div>
     </main>
   )
