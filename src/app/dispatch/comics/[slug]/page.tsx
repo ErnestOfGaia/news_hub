@@ -12,13 +12,38 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const db = getDb()
   const post = db.prepare(
-    `SELECT title, excerpt FROM content WHERE character = 'comics' AND slug = ? AND published = 1`
-  ).get(slug) as Pick<Content, 'title' | 'excerpt'> | undefined
+    `SELECT title, excerpt, comic_panels FROM content WHERE character = 'comics' AND slug = ? AND status = 'published'`
+  ).get(slug) as Pick<Content, 'title' | 'excerpt' | 'comic_panels'> | undefined
 
   if (!post) return {}
+
+  const description = post.excerpt ?? undefined
+  const ogTitle = `${post.title} — Comic Strips Archive`
+  const panels = post.comic_panels ? (JSON.parse(post.comic_panels) as string[]) : []
+  const ogImage = panels.length > 0 ? panels[0] : '/comics-banner.png'
+
   return {
     title: post.title,
-    description: post.excerpt ?? undefined,
+    description,
+    openGraph: {
+      title: ogTitle,
+      description,
+      type: 'article',
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: ogTitle,
+      description,
+      images: [ogImage],
+    },
   }
 }
 
@@ -26,7 +51,7 @@ export default async function ComicsPostPage({ params }: Props) {
   const { slug } = await params
   const db = getDb()
   const post = db.prepare(
-    `SELECT * FROM content WHERE character = 'comics' AND slug = ? AND published = 1`
+    `SELECT * FROM content WHERE character = 'comics' AND slug = ? AND status = 'published'`
   ).get(slug) as Content | undefined
 
   if (!post) notFound()

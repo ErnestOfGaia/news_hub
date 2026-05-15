@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { getDb } from '@/lib/db'
 import { ContentSummary } from '@/types'
 import { formatDate, getSeriesLabel } from '@/lib/utils'
@@ -7,6 +8,33 @@ import NewsCard from '@/components/ui/NewsCard'
 import Image from 'next/image'
 
 export const dynamic = 'force-dynamic'
+
+const PELICAN_DESCRIPTION =
+  "Pelican — The Guardian. Warm authority reporting project updates in mission-briefing format from the Coastal Command Center."
+
+export const metadata: Metadata = {
+  title: "Pelican's Dispatch — News Hub World",
+  description: PELICAN_DESCRIPTION,
+  openGraph: {
+    title: "Pelican's Dispatch — News Hub World",
+    description: PELICAN_DESCRIPTION,
+    type: 'website',
+    images: [
+      {
+        url: '/pelican-banner.png',
+        width: 1200,
+        height: 630,
+        alt: "Pelican — The Guardian",
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Pelican's Dispatch — News Hub World",
+    description: PELICAN_DESCRIPTION,
+    images: ['/pelican-banner.png'],
+  },
+}
 
 export default function PelicanDispatchPage() {
   const db = getDb()

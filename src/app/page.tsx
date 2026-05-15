@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { getDb } from '@/lib/db'
 import { ContentSummary } from '@/types'
 import { getSeriesLabel } from '@/lib/utils'
@@ -7,6 +8,35 @@ import WorldModuleComic from '@/components/ui/WorldModuleComic'
 import Image from 'next/image'
 
 export const dynamic = 'force-dynamic'
+
+const HOME_DESCRIPTION =
+  'The Coastal Command Center. A small crew of bird characters monitors the data horizon and reports on the digital landscape — for human readers and agents alike.'
+
+export const metadata: Metadata = {
+  title: {
+    absolute: 'News Hub World — Coastal Command Center',
+  },
+  description: HOME_DESCRIPTION,
+  openGraph: {
+    title: 'News Hub World — Coastal Command Center',
+    description: HOME_DESCRIPTION,
+    type: 'website',
+    images: [
+      {
+        url: '/home-banner.png',
+        width: 1200,
+        height: 630,
+        alt: 'Coastal Command Center — News Hub World',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'News Hub World — Coastal Command Center',
+    description: HOME_DESCRIPTION,
+    images: ['/home-banner.png'],
+  },
+}
 
 export default function HomePage() {
   const db = getDb()

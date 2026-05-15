@@ -14,13 +14,36 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const db = getDb()
   const post = db.prepare(
-    `SELECT title, excerpt FROM content WHERE character = 'zclaude' AND slug = ? AND published = 1`
+    `SELECT title, excerpt FROM content WHERE character = 'zclaude' AND slug = ? AND status = 'published'`
   ).get(slug) as Pick<Content, 'title' | 'excerpt'> | undefined
 
   if (!post) return {}
+
+  const description = post.excerpt ?? undefined
+  const ogTitle = `${post.title} — zClaude's Dispatch`
+
   return {
     title: post.title,
-    description: post.excerpt ?? undefined,
+    description,
+    openGraph: {
+      title: ogTitle,
+      description,
+      type: 'article',
+      images: [
+        {
+          url: '/zclaude-banner.png',
+          width: 1200,
+          height: 630,
+          alt: 'zClaude — The Terminal',
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: ogTitle,
+      description,
+      images: ['/zclaude-banner.png'],
+    },
   }
 }
 
@@ -28,7 +51,7 @@ export default async function ZClaudePostPage({ params }: Props) {
   const { slug } = await params
   const db = getDb()
   const post = db.prepare(
-    `SELECT * FROM content WHERE character = 'zclaude' AND slug = ? AND published = 1`
+    `SELECT * FROM content WHERE character = 'zclaude' AND slug = ? AND status = 'published'`
   ).get(slug) as Content | undefined
 
   if (!post) notFound()
