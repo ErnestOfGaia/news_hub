@@ -1,17 +1,8 @@
 import { getDb } from './db'
 import type { Content, ContentStatus } from '@/types'
+import { ALLOWED_TRANSITIONS, canTransition } from './content-transitions'
 
-export const ALLOWED_TRANSITIONS: Record<ContentStatus, ContentStatus[]> = {
-  draft: ['pending_review', 'published'],
-  pending_review: ['changes_requested', 'approved'],
-  changes_requested: ['pending_review'],
-  approved: ['published'],
-  published: ['draft'],
-}
-
-export function canTransition(from: ContentStatus, to: ContentStatus): boolean {
-  return ALLOWED_TRANSITIONS[from]?.includes(to) ?? false
-}
+export { ALLOWED_TRANSITIONS, canTransition }
 
 export class TransitionError extends Error {
   code: 'not_found' | 'illegal_transition' | 'missing_review_notes'
