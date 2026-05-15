@@ -15,7 +15,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     .prepare(
       `SELECT slug, character, updated_at
        FROM content
-       WHERE published = 1 AND tier = 'free'
+       WHERE status = 'published' AND tier = 'free'
        ORDER BY created_at DESC`
     )
     .all() as ContentSitemapRow[]

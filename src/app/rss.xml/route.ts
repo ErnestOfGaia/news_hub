@@ -9,7 +9,7 @@ export async function GET() {
   const db = getDb()
   const items = db
     .prepare(
-      `SELECT slug, title, excerpt, body, type, created_at FROM content WHERE published=1 AND tier='free' ORDER BY created_at DESC LIMIT 50`
+      `SELECT slug, title, excerpt, body, type, created_at FROM content WHERE status='published' AND tier='free' ORDER BY created_at DESC LIMIT 50`
     )
     .all() as {
     slug: string
