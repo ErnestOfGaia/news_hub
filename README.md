@@ -33,9 +33,9 @@ Content is stored in a SQLite database. The schema supports a future premium tie
 ## Local Development
 
 ```bash
-cp .env.example .env        # Set ADMIN_PASSWORD
+cp .env.example .env        # Set ADMIN_PASSWORD + PUBLISHING_AGENT_API_KEY
 npm install
-npm run dev                 # http://localhost:3000
+npm run dev                 # http://localhost:3000 (Docker publishes 3001)
 ```
 
 The SQLite database is created automatically at `./data/news.db` on first run.
@@ -46,7 +46,13 @@ The SQLite database is created automatically at `./data/news.db` on first run.
 docker compose up -d --build
 ```
 
-Nginx on the host proxies `news.ernestofgaia.xyz` → container port 3001. TLS via Certbot / Let's Encrypt.
+Nginx on the host proxies `news.ernestofgaia.xyz` → the container (host port 3001 → container port 3000). TLS via Certbot / Let's Encrypt.
+
+`docker compose` reads `.env` (not `.env.local`); set `ADMIN_PASSWORD`, `NEXT_PUBLIC_SITE_URL`, `PUBLISHING_AGENT_API_KEY`, and `HERMES_API_KEY` there.
+
+### Comic panels
+
+Panel images live in `public/media/<slug>/`, bind-mounted via `docker-compose.yml` so they persist and can be added without a rebuild. Next snapshots `public/` at **startup**, so after publishing an article with new panels, run `docker compose restart` once for the images to serve. On prod, sync the panel files to the VPS `public/media/<slug>/`, then restart.
 
 ---
 
