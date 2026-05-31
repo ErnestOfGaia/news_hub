@@ -1,3 +1,7 @@
+// Ticket 9 — 2026-05-28: /dispatch/static — replaces /dispatch/gremlin.
+// Queries use character='static' (post-migration value).
+// Old URL /dispatch/gremlin → 308 redirect to /dispatch/static (in next.config.ts).
+
 import type { Metadata } from 'next'
 import { getDb } from '@/lib/db'
 import { ContentSummary } from '@/types'
@@ -7,48 +11,48 @@ import CharacterCard from '@/components/ui/CharacterCard'
 
 export const dynamic = 'force-dynamic'
 
-const GREMLIN_DESCRIPTION =
-  'Gremlin — The Gremlin. Chaotic-good field reports on The Build Log with snarky commentary, transmitted up the chain to Pelican.'
+const STATIC_DESCRIPTION =
+  "Static — The Noise Correspondent. Chaotic-good field reports on The Build Log with snarky commentary, filed to Beacon."
 
 export const metadata: Metadata = {
-  title: "Gremlin's Dispatch — News Hub World",
-  description: GREMLIN_DESCRIPTION,
+  title: "Static's Dispatch — News Hub World",
+  description: STATIC_DESCRIPTION,
   openGraph: {
-    title: "Gremlin's Dispatch — News Hub World",
-    description: GREMLIN_DESCRIPTION,
+    title: "Static's Dispatch — News Hub World",
+    description: STATIC_DESCRIPTION,
     type: 'website',
     images: [
       {
         url: '/gremlin-banner.png',
         width: 1200,
         height: 630,
-        alt: 'Gremlin — Field Reporter',
+        alt: 'Static — Noise Correspondent',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: "Gremlin's Dispatch — News Hub World",
-    description: GREMLIN_DESCRIPTION,
+    title: "Static's Dispatch — News Hub World",
+    description: STATIC_DESCRIPTION,
     images: ['/gremlin-banner.png'],
   },
 }
 
-export default function GremlinDispatchPage() {
+export default function StaticDispatchPage() {
   const db = getDb()
   const posts = db.prepare(
     `SELECT id, slug, title, excerpt, series, character, created_at
-     FROM content WHERE character = 'gremlin' AND status = 'published' ORDER BY created_at DESC`
+     FROM content WHERE character = 'static' AND status = 'published' ORDER BY created_at DESC`
   ).all() as ContentSummary[]
 
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 flex flex-col gap-10">
       <CharacterCard
-        name="GREMLIN"
-        role="The Gremlin"
+        name="STATIC"
+        role="Noise Correspondent"
         statusLine="FIELD REPORT INCOMING"
-        description="Chaotic-good. Gets The Build Log, adds snarky commentary, reports to Pelican."
-        href="/dispatch/gremlin"
+        description="Chaotic-good. Gets The Build Log, adds snarky commentary, reports to Beacon."
+        href="/dispatch/static"
         portraitSrc="/gremlin-banner.png"
       />
 
@@ -87,7 +91,7 @@ export default function GremlinDispatchPage() {
                     <p className="text-body-md text-white/70">{post.excerpt}</p>
                   )}
                   <Link
-                    href={`/dispatch/gremlin/${post.slug}`}
+                    href={`/dispatch/static/${post.slug}`}
                     className="text-label-sm text-nhw-cyan hover:opacity-70 transition-opacity"
                   >
                     READ_FULL_REPORT &gt;
