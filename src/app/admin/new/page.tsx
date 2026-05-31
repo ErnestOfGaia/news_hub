@@ -73,8 +73,9 @@ export default function NewContentPage() {
             </select>
           </div>
 
+          {/* Ticket 5: character options renamed to beacon/static */}
           <div>
-            <label htmlFor="character" className="block text-sm font-medium text-stone-700 mb-1">Character</label>
+            <label htmlFor="character" className="block text-sm font-medium text-stone-700 mb-1">Character (Narrator Voice)</label>
             <select
               id="character"
               name="character"
@@ -82,8 +83,8 @@ export default function NewContentPage() {
               defaultValue=""
             >
               <option value="">—none—</option>
-              <option value="pelican">Pelican</option>
-              <option value="gremlin">Gremlin</option>
+              <option value="beacon">Beacon</option>
+              <option value="static">Static</option>
               <option value="zclaude">zClaude</option>
               <option value="ag">A.G.</option>
             </select>
@@ -108,6 +109,44 @@ export default function NewContentPage() {
               rows={3}
               className="w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
               placeholder="A brief summary (optional)"
+            />
+          </div>
+
+          {/* Ticket 5: new Static's Report metadata fields */}
+          <div>
+            <label htmlFor="subject" className="block text-sm font-medium text-stone-700 mb-1">Subject</label>
+            <input
+              type="text"
+              id="subject"
+              name="subject"
+              className="w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
+              placeholder="e.g. Ernest, zClaude, Jules…"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="audience_in_fiction" className="block text-sm font-medium text-stone-700 mb-1">Audience (In-Fiction)</label>
+            <select
+              id="audience_in_fiction"
+              name="audience_in_fiction"
+              className="w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
+              defaultValue=""
+            >
+              <option value="">—none—</option>
+              <option value="beacon">Beacon</option>
+            </select>
+          </div>
+
+          <div className="md:col-span-2">
+            <label htmlFor="source_seed" className="block text-sm font-medium text-stone-700 mb-1">
+              Source Seed <span className="font-normal text-stone-400">(audit trail — filename of the Story Seed)</span>
+            </label>
+            <input
+              type="text"
+              id="source_seed"
+              name="source_seed"
+              className="w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
+              placeholder="e.g. seed_ernestofgaia-secretary-booking_2026-05-26.md"
             />
           </div>
 
