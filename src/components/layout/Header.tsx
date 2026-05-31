@@ -1,11 +1,15 @@
 import Link from 'next/link'
 import NavLinks from './NavLinks'
 
+// Nav points at the routes that actually exist. (The earlier SIGNALS/COLLECTED/
+// SETTINGS links 404'd — that nav redesign is a separate, parked effort.)
 const NAV_LINKS = [
-  { href: '/', label: 'NEWS HUB WORLD' },
-  { href: '/signals', label: 'SIGNALS' },
-  { href: '/collected', label: 'COLLECTED' },
-  { href: '/settings', label: 'SETTINGS' },
+  { href: '/', label: 'HOME' },
+  { href: '/dispatch/beacon', label: 'BEACON' },
+  { href: '/dispatch/static', label: 'STATIC' },
+  { href: '/dispatch/zclaude', label: 'zCLAUDE' },
+  { href: '/dispatch/comics', label: 'COMICS' },
+  { href: '/about', label: 'ABOUT' },
 ]
 
 export default function Header() {
