@@ -1,11 +1,14 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import {
   DndContext,
   DragOverlay,
+  PointerSensor,
   useDraggable,
   useDroppable,
+  useSensor,
+  useSensors,
   type DragEndEvent,
   type DragStartEvent,
 } from '@dnd-kit/core'
@@ -13,7 +16,7 @@ import { CSS } from '@dnd-kit/utilities'
 import type { ContentStatus, ContentSummary } from '@/types'
 import { canTransition } from '@/lib/content-transitions'
 import { authorChip, voiceChip } from '@/components/admin/chips'
-import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { formatDate } from '@/lib/utils'
 
 export type KanbanRow = Pick<
@@ -37,10 +40,12 @@ interface Toast {
 // ─── Card ────────────────────────────────────────────────────────────────────
 
 function KanbanCard({ card }: { card: KanbanRow }) {
+  const router = useRouter()
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: String(card.id),
     data: card,
   })
+  const downPos = useRef<{ x: number; y: number } | null>(null)
   const author = authorChip(card.author)
   const voice = voiceChip(card.character)
   const style = transform
@@ -53,15 +58,18 @@ function KanbanCard({ card }: { card: KanbanRow }) {
       style={style}
       {...listeners}
       {...attributes}
-      className="bg-stone-50 border border-stone-200 rounded-md p-3 cursor-grab active:cursor-grabbing touch-none select-none hover:border-stone-400 hover:bg-white transition-colors"
+      onPointerDownCapture={(e) => {
+        downPos.current = { x: e.clientX, y: e.clientY }
+      }}
+      onClick={(e) => {
+        // Ignore the click that follows an actual drag (pointer moved).
+        const d = downPos.current
+        if (d && Math.hypot(e.clientX - d.x, e.clientY - d.y) > 6) return
+        router.push(`/admin/${card.id}`)
+      }}
+      className="bg-stone-50 border border-stone-200 rounded-md p-3 cursor-pointer active:cursor-grabbing touch-none select-none hover:border-stone-400 hover:bg-white transition-colors"
     >
-      <Link
-        href={`/admin/${card.id}`}
-        className="block mb-2"
-        draggable={false}
-      >
-        <p className="text-sm font-medium text-stone-900 line-clamp-2">{card.title}</p>
-      </Link>
+      <p className="text-sm font-medium text-stone-900 line-clamp-2 mb-2">{card.title}</p>
       <div className="flex flex-wrap gap-1 mb-2">
         <span className={`inline-block text-xs px-2 py-0.5 rounded-full font-medium ${author.className}`}>
           {author.label}
@@ -121,6 +129,12 @@ export function KanbanBoard({ initialItems }: { initialItems: KanbanRow[] }) {
   // When dragging to 'changes_requested', we pause and ask for review_notes
   const [pendingDrop, setPendingDrop] = useState<{ contentId: number } | null>(null)
   const [reviewNotes, setReviewNotes] = useState('')
+
+  // Require an 8px drag before activating, so a plain click on a card opens the
+  // editor (handled in KanbanCard) instead of starting a drag.
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
+  )
 
   useEffect(() => {
     if (!toast) return
@@ -208,7 +222,7 @@ export function KanbanBoard({ initialItems }: { initialItems: KanbanRow[] }) {
 
   return (
     <>
-      <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+      <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
         <div className="flex gap-4 overflow-x-auto pb-4">
           {COLUMNS.map(({ status, label }) => (
             <KanbanColumn key={status} status={status} label={label} cards={byStatus[status]} />

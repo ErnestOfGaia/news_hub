@@ -3,6 +3,7 @@ import { getDb } from '@/lib/db'
 import { Content } from '@/types'
 import { notFound } from 'next/navigation'
 import { ReviewControls } from '@/components/admin/ReviewControls'
+import { DeleteContentButton } from '@/components/admin/DeleteContentButton'
 
 export default async function EditContentPage({ params }: { params: Promise<{ id: string }> }) {
   const id = parseInt((await params).id)
@@ -179,7 +180,7 @@ export default async function EditContentPage({ params }: { params: Promise<{ id
         <button type="submit" name="action" value="draft" className="hidden" aria-hidden="true" tabIndex={-1} />
 
         <div className="flex items-center justify-between pt-4 border-t border-stone-200">
-          <div />
+          <DeleteContentButton id={item.id} title={item.title} />
           <div className="flex items-center gap-4">
             <button
               type="submit"
