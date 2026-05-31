@@ -1,0 +1,14 @@
+node_modules
+.next
+.git
+.env*
+data
+.dockerignore
+*.md
+*.db
+*.db-shm
+*.db-wal
+*.tsbuildinfo
+.DS_Store
+Thumbs.db
+_test_evidence_2026-05-15

@@ -29,3 +29,6 @@ Thumbs.db
 *.tsbuildinfo
 *.db-shm
 *.db-wal
+
+# Agent workspace (local tooling, not project code)
+.claude/
