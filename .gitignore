@@ -32,3 +32,8 @@ Thumbs.db
 
 # Agent workspace (local tooling, not project code)
 .claude/
+
+# Runtime-generated comic panels (published via the agent, synced to prod
+# separately — not source). Keep the directory, ignore its contents.
+/public/media/*
+!/public/media/.gitkeep

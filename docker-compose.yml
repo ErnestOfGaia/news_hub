@@ -13,6 +13,11 @@ services:
     volumes:
       # Persist the SQLite database across container restarts
       - ./data:/app/data
+      # Serve runtime-generated comic panels without a rebuild. The publishing
+      # agent writes panels to host public/media/<slug>/; this bind mount makes
+      # them visible to the container live. (public/comics/ stays baked into the
+      # image — only the media/ subdir is mounted.)
+      - ./public/media:/app/public/media
     networks:
       - default
       - nginx-proxy
