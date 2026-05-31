@@ -1,5 +1,10 @@
 'use client'
 
+// Ticket 8 — 2026-05-28: ReviewControls updated:
+//   - AUTHOR_LABELS: added publishing_agent entry.
+//   - Props: added optional subject and sourceSeed for sidebar display.
+//   - New metadata sidebar block renders subject and source-seed for Trewkat's review.
+
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import type { ContentAuthor, ContentStatus } from '@/types'
@@ -9,6 +14,8 @@ interface Props {
   currentStatus: ContentStatus
   reviewNotes: string | null
   author: ContentAuthor
+  subject?: string | null
+  sourceSeed?: string | null
 }
 
 const STATUS_LABELS: Record<ContentStatus, string> = {
@@ -30,10 +37,11 @@ const STATUS_COLORS: Record<ContentStatus, string> = {
 const AUTHOR_LABELS: Record<ContentAuthor, string> = {
   ernest: 'Ernest',
   trewkat: 'Trewkat',
-  hermes: 'Hermes',
+  hermes: 'Hermes (legacy)',
+  publishing_agent: 'Publishing Agent',
 }
 
-export function ReviewControls({ id, currentStatus, reviewNotes, author }: Props) {
+export function ReviewControls({ id, currentStatus, reviewNotes, author, subject, sourceSeed }: Props) {
   const router = useRouter()
   const [localStatus, setLocalStatus] = useState<ContentStatus>(currentStatus)
   const [localNotes, setLocalNotes] = useState<string | null>(reviewNotes)
@@ -83,6 +91,23 @@ export function ReviewControls({ id, currentStatus, reviewNotes, author }: Props
           Author: <span className="font-medium text-stone-700">{AUTHOR_LABELS[author]}</span>
         </span>
       </div>
+
+      {/* Ticket 8: metadata sidebar for Trewkat's review surface */}
+      {(subject || sourceSeed) && (
+        <div className="rounded-md bg-stone-50 border border-stone-200 px-4 py-3 text-sm space-y-1">
+          {subject && (
+            <p className="text-stone-600">
+              <span className="font-medium text-stone-700">Subject:</span> {subject}
+            </p>
+          )}
+          {sourceSeed && (
+            <p className="text-stone-600">
+              <span className="font-medium text-stone-700">Source Seed:</span>{' '}
+              <code className="text-xs bg-stone-100 px-1 py-0.5 rounded font-mono">{sourceSeed}</code>
+            </p>
+          )}
+        </div>
+      )}
 
       {/* Existing review_notes callout */}
       {localNotes && localStatus === 'changes_requested' && (
