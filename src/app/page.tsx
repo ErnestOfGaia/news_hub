@@ -42,7 +42,7 @@ export default function HomePage() {
   const db = getDb()
   const latestItems = db.prepare(
     `SELECT id, slug, title, excerpt, series, character, created_at
-     FROM content WHERE status = 'published' AND tier = 'free' AND character = 'pelican' ORDER BY created_at DESC LIMIT 4`
+     FROM content WHERE status = 'published' AND tier = 'free' AND character = 'beacon' ORDER BY created_at DESC LIMIT 4`
   ).all() as ContentSummary[]
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 flex flex-col gap-12">
@@ -101,19 +101,19 @@ export default function HomePage() {
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <CharacterCard
-              name="PELICAN"
+              name="BEACON"
               role="The Guardian"
               statusLine="MONITORING THE HORIZON"
-              description="Warm authority. Reports project updates in mission-briefing format. Owns New News."
-              href="/dispatch/pelican"
+              description="Warm authority. Reports project updates in mission-briefing format. In-fiction audience for Static's Reports."
+              href="/dispatch/beacon"
               portraitSrc="/pelican-banner.png"
             />
             <CharacterCard
-              name="GREMLIN"
-              role="The Gremlin"
+              name="STATIC"
+              role="Noise Correspondent"
               statusLine="FIELD REPORT INCOMING"
-              description="Chaotic-good. Gets The Build Log, adds snarky commentary, reports to Pelican."
-              href="/dispatch/gremlin"
+              description="Chaotic-good. Gets The Build Log, adds snarky commentary, reports to Beacon."
+              href="/dispatch/static"
               portraitSrc="/gremlin-banner.png"
             />
             <CharacterCard

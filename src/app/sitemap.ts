@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic'
 
 type ContentSitemapRow = {
   slug: string
-  character: 'pelican' | 'gremlin' | 'zclaude' | 'comics' | 'ag' | null
+  character: 'beacon' | 'static' | 'zclaude' | 'comics' | 'ag' | null
   updated_at: string
 }
 
@@ -45,13 +45,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.5,
     },
     {
-      url: `${base}/dispatch/pelican`,
+      url: `${base}/dispatch/beacon`,
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 0.9,
     },
     {
-      url: `${base}/dispatch/gremlin`,
+      url: `${base}/dispatch/static`,
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 0.9,

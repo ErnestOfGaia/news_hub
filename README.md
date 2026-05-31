@@ -61,7 +61,7 @@ src/
 │   └── admin/                 Password-gated admin panel
 ├── components/
 │   ├── layout/                Header, Footer, PostCard, ArticleCard
-│   └── ui/                    MarkdownRenderer, XDiscussButton
+│   └── ui/                    MarkdownRenderer, CharacterCard, NewsCard
 ├── lib/
 │   ├── db.ts                  SQLite client + schema init
 │   ├── auth.ts                Admin session cookie logic
