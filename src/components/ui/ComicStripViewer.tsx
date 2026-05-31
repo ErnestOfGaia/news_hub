@@ -1,9 +1,27 @@
 'use client'
 
+// Ticket 6 — 2026-05-28: ComicStripViewer now accepts both:
+//   Legacy shape: panels = string[]   (image paths, no captions)
+//   New shape:    panels = PanelObject[] ({ image, caption?, alt? })
+// When given the legacy shape, panels display with no captions/alt (graceful degradation).
+
 import { useState, useEffect, useRef } from 'react'
 
+export interface PanelObject {
+  image: string
+  caption?: string
+  alt?: string
+}
+
+export type PanelData = string | PanelObject
+
+function normalizePanel(p: PanelData): PanelObject {
+  if (typeof p === 'string') return { image: p }
+  return p
+}
+
 export type ComicStripViewerProps = {
-  panels: string[]
+  panels: PanelData[]
   initialPage?: number
   // tier is accepted for future Phase 2 use; only free panel view is rendered in Phase 1
   tier: 'free' | 'premium'
@@ -80,6 +98,8 @@ export default function ComicStripViewer({
     )
   }
 
+  const panel = normalizePanel(panels[currentPage])
+
   return (
     <div
       ref={overlayRef}
@@ -98,14 +118,21 @@ export default function ComicStripViewer({
         ✕
       </button>
 
-      {/* Panel */}
+      {/* Panel image */}
       <div className="flex flex-1 items-center justify-center px-16 py-8 overflow-hidden">
         <img
-          src={panels[currentPage]}
-          alt={`Comic page ${currentPage + 1} of ${panels.length}`}
+          src={panel.image}
+          alt={panel.alt ?? `Comic page ${currentPage + 1} of ${panels.length}`}
           className="max-h-full max-w-full object-contain"
         />
       </div>
+
+      {/* Caption (new shape only — gracefully absent for legacy string shape) */}
+      {panel.caption && (
+        <p className="text-center text-nhw-cyan text-body-md px-16 pb-2 shrink-0">
+          {panel.caption}
+        </p>
+      )}
 
       {/* Navigation */}
       <div className="flex items-center justify-center gap-8 pb-8 shrink-0">
