@@ -45,7 +45,7 @@ export default async function EditContentPage({ params }: { params: Promise<{ id
               name="title"
               required
               defaultValue={item.title}
-              className="w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
+              className="w-full px-3 py-2 bg-white text-stone-900 placeholder:text-stone-400 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
             />
           </div>
 
@@ -54,7 +54,7 @@ export default async function EditContentPage({ params }: { params: Promise<{ id
             <select
               id="type"
               name="type"
-              className="w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
+              className="w-full px-3 py-2 bg-white text-stone-900 placeholder:text-stone-400 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
               defaultValue={item.type}
             >
               <option value="post">Post (Short-form)</option>
@@ -67,7 +67,7 @@ export default async function EditContentPage({ params }: { params: Promise<{ id
             <select
               id="tier"
               name="tier"
-              className="w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
+              className="w-full px-3 py-2 bg-white text-stone-900 placeholder:text-stone-400 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
               defaultValue={item.tier}
             >
               <option value="free">Free (Public)</option>
@@ -80,7 +80,7 @@ export default async function EditContentPage({ params }: { params: Promise<{ id
             <select
               id="series"
               name="series"
-              className="w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
+              className="w-full px-3 py-2 bg-white text-stone-900 placeholder:text-stone-400 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
               defaultValue={item.series || ''}
             >
               <option value="">(none)</option>
@@ -97,7 +97,7 @@ export default async function EditContentPage({ params }: { params: Promise<{ id
             <select
               id="character"
               name="character"
-              className="w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
+              className="w-full px-3 py-2 bg-white text-stone-900 placeholder:text-stone-400 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
               defaultValue={item.character || ''}
             >
               <option value="">—none—</option>
@@ -108,18 +108,6 @@ export default async function EditContentPage({ params }: { params: Promise<{ id
             </select>
           </div>
 
-          <div>
-            <label htmlFor="x_thread_url" className="block text-sm font-medium text-stone-700 mb-1">X Thread URL</label>
-            <input
-              type="url"
-              id="x_thread_url"
-              name="x_thread_url"
-              defaultValue={item.x_thread_url || ''}
-              className="w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
-              placeholder="https://x.com/..."
-            />
-          </div>
-
           <div className="md:col-span-2">
             <label htmlFor="excerpt" className="block text-sm font-medium text-stone-700 mb-1">Excerpt</label>
             <textarea
@@ -127,7 +115,7 @@ export default async function EditContentPage({ params }: { params: Promise<{ id
               name="excerpt"
               rows={3}
               defaultValue={item.excerpt || ''}
-              className="w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
+              className="w-full px-3 py-2 bg-white text-stone-900 placeholder:text-stone-400 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
             />
           </div>
 
@@ -139,7 +127,7 @@ export default async function EditContentPage({ params }: { params: Promise<{ id
               id="subject"
               name="subject"
               defaultValue={item.subject || ''}
-              className="w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
+              className="w-full px-3 py-2 bg-white text-stone-900 placeholder:text-stone-400 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
               placeholder="e.g. Ernest, zClaude, Jules…"
             />
           </div>
@@ -149,7 +137,7 @@ export default async function EditContentPage({ params }: { params: Promise<{ id
             <select
               id="audience_in_fiction"
               name="audience_in_fiction"
-              className="w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
+              className="w-full px-3 py-2 bg-white text-stone-900 placeholder:text-stone-400 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
               defaultValue={item.audience_in_fiction || ''}
             >
               <option value="">—none—</option>
@@ -166,7 +154,7 @@ export default async function EditContentPage({ params }: { params: Promise<{ id
               id="source_seed"
               name="source_seed"
               defaultValue={item.source_seed || ''}
-              className="w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
+              className="w-full px-3 py-2 bg-white text-stone-900 placeholder:text-stone-400 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
               placeholder="e.g. seed_ernestofgaia-secretary-booking_2026-05-26.md"
             />
           </div>
@@ -179,7 +167,7 @@ export default async function EditContentPage({ params }: { params: Promise<{ id
               required
               rows={20}
               defaultValue={item.body}
-              className="w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500 font-mono text-sm"
+              className="w-full px-3 py-2 bg-white text-stone-900 placeholder:text-stone-400 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500 font-mono text-sm"
             />
           </div>
         </div>

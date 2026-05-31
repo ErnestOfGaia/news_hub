@@ -237,7 +237,7 @@ export function KanbanBoard({ initialItems }: { initialItems: KanbanRow[] }) {
               value={reviewNotes}
               onChange={(e) => setReviewNotes(e.target.value)}
               rows={4}
-              className="w-full px-3 py-2 border border-stone-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-stone-500 mb-4"
+              className="w-full px-3 py-2 bg-white text-stone-900 placeholder:text-stone-400 border border-stone-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-stone-500 mb-4"
               placeholder="What needs to change…"
             />
             <div className="flex justify-end gap-3">
