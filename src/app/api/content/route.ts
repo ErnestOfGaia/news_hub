@@ -1,12 +1,13 @@
 // Ticket 5 — 2026-05-28: admin content creation route updated.
 // Added subject, audience_in_fiction, source_seed fields to INSERT.
 import { NextRequest, NextResponse } from 'next/server'
-import { requireAdmin } from '@/lib/auth'
+import { requireAdminApi, redirectTarget } from '@/lib/auth'
 import { getDb } from '@/lib/db'
 import { slugify, uniqueSlug } from '@/lib/utils'
 
 export async function POST(req: NextRequest) {
-  await requireAdmin()
+  const unauth = await requireAdminApi()
+  if (unauth) return unauth
 
   const data = await req.formData()
   const title = data.get('title')?.toString().trim() ?? ''
@@ -47,5 +48,5 @@ export async function POST(req: NextRequest) {
     sourceSeed
   )
 
-  return NextResponse.redirect(new URL('/admin', req.url))
+  return NextResponse.redirect(redirectTarget(req, '/admin'), { status: 303 })
 }

@@ -1,11 +1,12 @@
 // Ticket 5 — 2026-05-28: admin content update route updated.
 // Added subject, audience_in_fiction, source_seed fields to UPDATE.
 import { NextRequest, NextResponse } from 'next/server'
-import { requireAdmin } from '@/lib/auth'
+import { requireAdminApi, redirectTarget } from '@/lib/auth'
 import { getDb } from '@/lib/db'
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  await requireAdmin()
+  const unauth = await requireAdminApi()
+  if (unauth) return unauth
 
   const id = parseInt((await params).id)
   if (isNaN(id)) {
@@ -43,11 +44,12 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
      WHERE id=?`
   ).run(title, body, excerpt, type, tier, series, character, xUrl, subject, audienceInFiction, sourceSeed, id)
 
-  return NextResponse.redirect(new URL('/admin', req.url), { status: 303 })
+  return NextResponse.redirect(redirectTarget(req, '/admin'), { status: 303 })
 }
 
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  await requireAdmin()
+  const unauth = await requireAdminApi()
+  if (unauth) return unauth
 
   const id = parseInt((await params).id)
   if (isNaN(id)) {

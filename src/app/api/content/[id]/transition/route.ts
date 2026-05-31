@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { requireAdmin } from '@/lib/auth'
+import { requireAdminApi } from '@/lib/auth'
 import { applyTransition, TransitionError } from '@/lib/content-status'
 import type { ContentStatus } from '@/types'
 
@@ -16,7 +16,8 @@ function isContentStatus(v: unknown): v is ContentStatus {
 }
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  await requireAdmin()
+  const unauth = await requireAdminApi()
+  if (unauth) return unauth
 
   const id = parseInt((await params).id)
   if (isNaN(id)) {

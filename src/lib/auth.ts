@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import crypto, { timingSafeEqual } from 'crypto'
-import type { NextRequest } from 'next/server'
+import { NextResponse, type NextRequest } from 'next/server'
 
 const COOKIE_NAME = 'admin_session'
 const MAX_AGE = 60 * 60 * 24 * 7
@@ -18,6 +18,21 @@ export async function checkAdminSession(): Promise<boolean> {
 
 export async function requireAdmin(): Promise<void> {
   if (!(await checkAdminSession())) redirect('/login')
+}
+
+// For API route handlers: returns a 401 JSON response when the caller is not an
+// authenticated admin, else null. Unlike requireAdmin() (which redirects to
+// /login — correct for page routes), this gives programmatic callers a proper
+// 401 instead of a 307 to an HTML login page.
+//
+//   const unauth = await requireAdminApi()
+//   if (unauth) return unauth
+export async function requireAdminApi(): Promise<NextResponse | null> {
+  if (await checkAdminSession()) return null
+  return NextResponse.json(
+    { error: 'Admin authentication required' },
+    { status: 401 }
+  )
 }
 
 export function verifyPassword(input: string): boolean {
