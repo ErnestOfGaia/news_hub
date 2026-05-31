@@ -34,7 +34,6 @@ function initSchema(db: Database.Database): void {
       type          TEXT NOT NULL DEFAULT 'post',
       tier          TEXT NOT NULL DEFAULT 'free',
       series        TEXT,
-      x_thread_url  TEXT,
       created_at    TEXT NOT NULL DEFAULT (datetime('now')),
       updated_at    TEXT NOT NULL DEFAULT (datetime('now'))
     );
@@ -95,5 +94,11 @@ function initSchema(db: Database.Database): void {
   if (columnNames.includes('published')) {
     db.prepare("UPDATE content SET status = 'published' WHERE published = 1 AND status = 'draft'").run()
     db.exec("ALTER TABLE content DROP COLUMN published")
+  }
+
+  // x_thread_url removed 2026-05-31: the site uses LinkedIn, so the field was
+  // dropped from the admin forms. Guarded so it only runs where the column exists.
+  if (columnNames.includes('x_thread_url')) {
+    db.exec("ALTER TABLE content DROP COLUMN x_thread_url")
   }
 }

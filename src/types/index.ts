@@ -30,7 +30,6 @@ export interface Content {
   author: ContentAuthor
   review_notes: string | null
   published_at: string | null
-  x_thread_url: string | null
   created_at: string
   updated_at: string
   // New fields (Ticket 1 schema, Ticket 2 types) — nullable, absent on legacy rows.

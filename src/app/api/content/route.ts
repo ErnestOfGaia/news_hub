@@ -30,9 +30,9 @@ export async function POST(req: NextRequest) {
   const sourceSeed = data.get('source_seed')?.toString().trim() || null
 
   db.prepare(`
-    INSERT INTO content (slug, title, body, excerpt, type, tier, series, character, x_thread_url,
+    INSERT INTO content (slug, title, body, excerpt, type, tier, series, character,
                          subject, audience_in_fiction, source_seed)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `).run(
     slug,
     title,
@@ -42,7 +42,6 @@ export async function POST(req: NextRequest) {
     data.get('tier') ?? 'free',
     series,
     character,
-    data.get('x_thread_url')?.toString() || null,
     subject,
     audienceInFiction,
     sourceSeed

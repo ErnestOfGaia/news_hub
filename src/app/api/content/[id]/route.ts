@@ -31,18 +31,17 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   const tier = data.get('tier') ?? 'free'
   const series = data.get('series')?.toString() || null
   const character = data.get('character')?.toString() || null
-  const xUrl = data.get('x_thread_url')?.toString().trim() || null
   const subject = data.get('subject')?.toString().trim() || null
   const audienceInFiction = data.get('audience_in_fiction')?.toString() || null
   const sourceSeed = data.get('source_seed')?.toString().trim() || null
 
   db.prepare(
     `UPDATE content
-     SET title=?, body=?, excerpt=?, type=?, tier=?, series=?, character=?, x_thread_url=?,
+     SET title=?, body=?, excerpt=?, type=?, tier=?, series=?, character=?,
          subject=?, audience_in_fiction=?, source_seed=?,
          updated_at=datetime('now')
      WHERE id=?`
-  ).run(title, body, excerpt, type, tier, series, character, xUrl, subject, audienceInFiction, sourceSeed, id)
+  ).run(title, body, excerpt, type, tier, series, character, subject, audienceInFiction, sourceSeed, id)
 
   return NextResponse.redirect(redirectTarget(req, '/admin'), { status: 303 })
 }
