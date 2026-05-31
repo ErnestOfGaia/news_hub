@@ -28,6 +28,18 @@ export function sessionCookieOptions() {
   return { name: COOKIE_NAME, value: getToken(), httpOnly: true, sameSite: 'strict' as const, maxAge: MAX_AGE, path: '/' }
 }
 
+// Build an absolute redirect URL from the incoming request's Host header rather
+// than request.url. In the standalone Next server (Docker: HOSTNAME=0.0.0.0,
+// PORT=3000) request.url reflects the container's internal bind address, which
+// would send the browser to an unreachable 0.0.0.0:3000. Behind a reverse proxy
+// (nginx-proxy-manager in prod) the Host header carries the public hostname, and
+// x-forwarded-proto carries the original scheme.
+export function redirectTarget(request: Request, path: string): string {
+  const host = request.headers.get('host')
+  const proto = request.headers.get('x-forwarded-proto') ?? 'http'
+  return `${proto}://${host}${path}`
+}
+
 export function requireHermesKey(req: NextRequest): boolean {
   const expected = process.env.HERMES_API_KEY
   if (!expected) return false
