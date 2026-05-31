@@ -131,7 +131,7 @@ export default async function ArticlePage({ params }: Props) {
     <main className="max-w-prose mx-auto py-12 px-4 space-y-8">
       <Link
         href="/"
-        className="text-sm text-stone-500 hover:text-stone-800 flex items-center gap-1 transition-colors"
+        className="text-sm text-stone-400 hover:text-stone-100 flex items-center gap-1 transition-colors"
       >
         ← Back to feed
       </Link>
@@ -143,7 +143,7 @@ export default async function ArticlePage({ params }: Props) {
               {article.series.replace('-', ' ')}
             </span>
           )}
-          <h1 className="text-4xl font-serif font-bold text-stone-900 leading-tight">
+          <h1 className="text-4xl font-serif font-bold text-stone-100 leading-tight">
             {article.title}
           </h1>
           <div className="text-sm text-stone-500">{formatDate(article.created_at)}</div>
@@ -160,18 +160,18 @@ export default async function ArticlePage({ params }: Props) {
         }
       </article>
 
-      <hr className="border-stone-200" />
+      <hr className="border-stone-700" />
 
       <footer className="py-8 space-y-4">
-        <h3 className="font-serif text-xl font-bold text-stone-900">Questions or thoughts?</h3>
-        <p className="text-stone-600">
+        <h3 className="font-serif text-xl font-bold text-stone-100">Questions or thoughts?</h3>
+        <p className="text-stone-300">
           Connect with Ernest on LinkedIn to discuss this article.
         </p>
         <a
           href="https://www.linkedin.com/in/ernestofgaia/"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-block bg-stone-900 text-stone-50 px-6 py-3 rounded-none font-medium hover:bg-stone-800 transition-colors"
+          className="inline-block bg-stone-100 text-stone-900 px-6 py-3 rounded-none font-medium hover:bg-white transition-colors"
         >
           Discuss on LinkedIn
         </a>
