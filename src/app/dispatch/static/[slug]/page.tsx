@@ -1,3 +1,4 @@
+// Ticket 9 — 2026-05-28: /dispatch/static/[slug] — replaces /dispatch/gremlin/[slug].
 import { notFound } from 'next/navigation'
 import { getDb } from '@/lib/db'
 import { Content } from '@/types'
@@ -5,7 +6,6 @@ import { formatDate, getSeriesLabel } from '@/lib/utils'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import MarkdownRenderer from '@/components/ui/MarkdownRenderer'
-import Image from 'next/image'
 
 type Props = {
   params: Promise<{ slug: string }>
@@ -15,13 +15,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const db = getDb()
   const post = db.prepare(
-    `SELECT title, excerpt FROM content WHERE character = 'pelican' AND slug = ? AND status = 'published'`
+    `SELECT title, excerpt FROM content WHERE character = 'static' AND slug = ? AND status = 'published'`
   ).get(slug) as Pick<Content, 'title' | 'excerpt'> | undefined
 
   if (!post) return {}
 
   const description = post.excerpt ?? undefined
-  const ogTitle = `${post.title} — Pelican's Dispatch`
+  const ogTitle = `${post.title} — Static's Dispatch`
 
   return {
     title: post.title,
@@ -32,10 +32,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: 'article',
       images: [
         {
-          url: '/pelican-banner.png',
+          url: '/gremlin-banner.png',
           width: 1200,
           height: 630,
-          alt: "Pelican — The Guardian",
+          alt: 'Static — Noise Correspondent',
         },
       ],
     },
@@ -43,16 +43,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       card: 'summary_large_image',
       title: ogTitle,
       description,
-      images: ['/pelican-banner.png'],
+      images: ['/gremlin-banner.png'],
     },
   }
 }
 
-export default async function PelicanPostPage({ params }: Props) {
+export default async function StaticPostPage({ params }: Props) {
   const { slug } = await params
   const db = getDb()
   const post = db.prepare(
-    `SELECT * FROM content WHERE character = 'pelican' AND slug = ? AND status = 'published'`
+    `SELECT * FROM content WHERE character = 'static' AND slug = ? AND status = 'published'`
   ).get(slug) as Content | undefined
 
   if (!post) notFound()
@@ -62,28 +62,16 @@ export default async function PelicanPostPage({ params }: Props) {
   return (
     <main className="max-w-3xl mx-auto px-4 sm:px-6 py-8 flex flex-col gap-8">
       <Link
-        href="/dispatch/pelican"
+        href="/dispatch/static"
         className="text-label-sm text-nhw-cyan hover:opacity-70 transition-opacity"
       >
-        ← PELICAN&apos;S DISPATCH
+        ← STATIC&apos;S DISPATCH
       </Link>
 
-      {/* Banner */}
-      <section className="w-full h-48 sm:h-64 lg:h-80 relative overflow-hidden border-2 border-nhw-cyan group">
-        <Image
-          src="/pelican-banner.png"
-          alt="Pelican Banner"
-          fill
-          className="object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
-          priority
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-nhw-surface/90 via-transparent to-transparent pointer-events-none" />
-      </section>
-
-      <header className="flex flex-col gap-3">
+      <header className="flex flex-col gap-3 border-l-2 border-nhw-amber pl-4">
         <div className="flex items-center gap-3">
           <span className="text-label-sm text-nhw-cyan/60 uppercase tracking-widest">
-            PELICAN — THE GUARDIAN
+            STATIC — NOISE CORRESPONDENT
           </span>
           {seriesLabel && (
             <span className="bg-nhw-amber/10 text-nhw-amber border border-nhw-amber/30 text-label-sm uppercase tracking-widest px-2 py-0.5">
@@ -92,7 +80,7 @@ export default async function PelicanPostPage({ params }: Props) {
           )}
         </div>
         <h1 className="text-headline-lg text-nhw-cyan uppercase">{post.title}</h1>
-        <time className="text-label-sm text-nhw-cyan/60">{formatDate(post.created_at)}</time>
+        <time className="text-label-sm text-nhw-amber/60">{formatDate(post.created_at)}</time>
       </header>
 
       <MarkdownRenderer content={post.body} />

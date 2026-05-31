@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import crypto, { timingSafeEqual } from 'crypto'
-import type { NextRequest } from 'next/server'
+import { NextResponse, type NextRequest } from 'next/server'
 
 const COOKIE_NAME = 'admin_session'
 const MAX_AGE = 60 * 60 * 24 * 7
@@ -20,12 +20,39 @@ export async function requireAdmin(): Promise<void> {
   if (!(await checkAdminSession())) redirect('/login')
 }
 
+// For API route handlers: returns a 401 JSON response when the caller is not an
+// authenticated admin, else null. Unlike requireAdmin() (which redirects to
+// /login — correct for page routes), this gives programmatic callers a proper
+// 401 instead of a 307 to an HTML login page.
+//
+//   const unauth = await requireAdminApi()
+//   if (unauth) return unauth
+export async function requireAdminApi(): Promise<NextResponse | null> {
+  if (await checkAdminSession()) return null
+  return NextResponse.json(
+    { error: 'Admin authentication required' },
+    { status: 401 }
+  )
+}
+
 export function verifyPassword(input: string): boolean {
   return input === (process.env.ADMIN_PASSWORD ?? '')
 }
 
 export function sessionCookieOptions() {
   return { name: COOKIE_NAME, value: getToken(), httpOnly: true, sameSite: 'strict' as const, maxAge: MAX_AGE, path: '/' }
+}
+
+// Build an absolute redirect URL from the incoming request's Host header rather
+// than request.url. In the standalone Next server (Docker: HOSTNAME=0.0.0.0,
+// PORT=3000) request.url reflects the container's internal bind address, which
+// would send the browser to an unreachable 0.0.0.0:3000. Behind a reverse proxy
+// (nginx-proxy-manager in prod) the Host header carries the public hostname, and
+// x-forwarded-proto carries the original scheme.
+export function redirectTarget(request: Request, path: string): string {
+  const host = request.headers.get('host')
+  const proto = request.headers.get('x-forwarded-proto') ?? 'http'
+  return `${proto}://${host}${path}`
 }
 
 export function requireHermesKey(req: NextRequest): boolean {

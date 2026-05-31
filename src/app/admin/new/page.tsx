@@ -26,7 +26,7 @@ export default function NewContentPage() {
               id="title"
               name="title"
               required
-              className="w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
+              className="w-full px-3 py-2 bg-white text-stone-900 placeholder:text-stone-400 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
               placeholder="e.g. Building the New News Hub"
             />
           </div>
@@ -36,7 +36,7 @@ export default function NewContentPage() {
             <select
               id="type"
               name="type"
-              className="w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
+              className="w-full px-3 py-2 bg-white text-stone-900 placeholder:text-stone-400 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
               defaultValue="post"
             >
               <option value="post">Post (Short-form)</option>
@@ -49,7 +49,7 @@ export default function NewContentPage() {
             <select
               id="tier"
               name="tier"
-              className="w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
+              className="w-full px-3 py-2 bg-white text-stone-900 placeholder:text-stone-400 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
               defaultValue="free"
             >
               <option value="free">Free (Public)</option>
@@ -62,7 +62,7 @@ export default function NewContentPage() {
             <select
               id="series"
               name="series"
-              className="w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
+              className="w-full px-3 py-2 bg-white text-stone-900 placeholder:text-stone-400 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
               defaultValue=""
             >
               <option value="">(none)</option>
@@ -73,31 +73,21 @@ export default function NewContentPage() {
             </select>
           </div>
 
+          {/* Ticket 5: character options renamed to beacon/static */}
           <div>
-            <label htmlFor="character" className="block text-sm font-medium text-stone-700 mb-1">Character</label>
+            <label htmlFor="character" className="block text-sm font-medium text-stone-700 mb-1">Character (Narrator Voice)</label>
             <select
               id="character"
               name="character"
-              className="w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
+              className="w-full px-3 py-2 bg-white text-stone-900 placeholder:text-stone-400 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
               defaultValue=""
             >
               <option value="">—none—</option>
-              <option value="pelican">Pelican</option>
-              <option value="gremlin">Gremlin</option>
+              <option value="beacon">Beacon</option>
+              <option value="static">Static</option>
               <option value="zclaude">zClaude</option>
               <option value="ag">A.G.</option>
             </select>
-          </div>
-
-          <div>
-            <label htmlFor="x_thread_url" className="block text-sm font-medium text-stone-700 mb-1">X Thread URL</label>
-            <input
-              type="url"
-              id="x_thread_url"
-              name="x_thread_url"
-              className="w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
-              placeholder="https://x.com/..."
-            />
           </div>
 
           <div className="md:col-span-2">
@@ -106,8 +96,46 @@ export default function NewContentPage() {
               id="excerpt"
               name="excerpt"
               rows={3}
-              className="w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
+              className="w-full px-3 py-2 bg-white text-stone-900 placeholder:text-stone-400 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
               placeholder="A brief summary (optional)"
+            />
+          </div>
+
+          {/* Ticket 5: new Static's Report metadata fields */}
+          <div>
+            <label htmlFor="subject" className="block text-sm font-medium text-stone-700 mb-1">Subject</label>
+            <input
+              type="text"
+              id="subject"
+              name="subject"
+              className="w-full px-3 py-2 bg-white text-stone-900 placeholder:text-stone-400 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
+              placeholder="e.g. Ernest, zClaude, Jules…"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="audience_in_fiction" className="block text-sm font-medium text-stone-700 mb-1">Audience (In-Fiction)</label>
+            <select
+              id="audience_in_fiction"
+              name="audience_in_fiction"
+              className="w-full px-3 py-2 bg-white text-stone-900 placeholder:text-stone-400 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
+              defaultValue=""
+            >
+              <option value="">—none—</option>
+              <option value="beacon">Beacon</option>
+            </select>
+          </div>
+
+          <div className="md:col-span-2">
+            <label htmlFor="source_seed" className="block text-sm font-medium text-stone-700 mb-1">
+              Source Seed <span className="font-normal text-stone-400">(audit trail — filename of the Story Seed)</span>
+            </label>
+            <input
+              type="text"
+              id="source_seed"
+              name="source_seed"
+              className="w-full px-3 py-2 bg-white text-stone-900 placeholder:text-stone-400 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
+              placeholder="e.g. seed_ernestofgaia-secretary-booking_2026-05-26.md"
             />
           </div>
 
@@ -118,7 +146,7 @@ export default function NewContentPage() {
               name="body"
               required
               rows={20}
-              className="w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500 font-mono text-sm"
+              className="w-full px-3 py-2 bg-white text-stone-900 placeholder:text-stone-400 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500 font-mono text-sm"
               placeholder="Write the content in Markdown..."
             />
           </div>

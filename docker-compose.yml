@@ -8,11 +8,16 @@ services:
       - ADMIN_PASSWORD=${ADMIN_PASSWORD}
       - DATABASE_URL=/app/data/news.db
       - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
-      - NEXT_PUBLIC_X_HANDLE=${NEXT_PUBLIC_X_HANDLE}
       - HERMES_API_KEY=${HERMES_API_KEY}
+      - PUBLISHING_AGENT_API_KEY=${PUBLISHING_AGENT_API_KEY}
     volumes:
       # Persist the SQLite database across container restarts
       - ./data:/app/data
+      # Serve runtime-generated comic panels without a rebuild. The publishing
+      # agent writes panels to host public/media/<slug>/; this bind mount makes
+      # them visible to the container live. (public/comics/ stays baked into the
+      # image — only the media/ subdir is mounted.)
+      - ./public/media:/app/public/media
     networks:
       - default
       - nginx-proxy

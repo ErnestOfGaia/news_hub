@@ -1,10 +1,13 @@
+// Ticket 5 — 2026-05-28: admin content creation route updated.
+// Added subject, audience_in_fiction, source_seed fields to INSERT.
 import { NextRequest, NextResponse } from 'next/server'
-import { requireAdmin } from '@/lib/auth'
+import { requireAdminApi, redirectTarget } from '@/lib/auth'
 import { getDb } from '@/lib/db'
 import { slugify, uniqueSlug } from '@/lib/utils'
 
 export async function POST(req: NextRequest) {
-  await requireAdmin()
+  const unauth = await requireAdminApi()
+  if (unauth) return unauth
 
   const data = await req.formData()
   const title = data.get('title')?.toString().trim() ?? ''
@@ -22,10 +25,14 @@ export async function POST(req: NextRequest) {
   const slug = uniqueSlug(db, slugify(title))
   const series = data.get('series')?.toString() || null
   const character = data.get('character')?.toString() || null
+  const subject = data.get('subject')?.toString().trim() || null
+  const audienceInFiction = data.get('audience_in_fiction')?.toString() || null
+  const sourceSeed = data.get('source_seed')?.toString().trim() || null
 
   db.prepare(`
-    INSERT INTO content (slug, title, body, excerpt, type, tier, series, character, x_thread_url)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO content (slug, title, body, excerpt, type, tier, series, character,
+                         subject, audience_in_fiction, source_seed)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `).run(
     slug,
     title,
@@ -35,8 +42,10 @@ export async function POST(req: NextRequest) {
     data.get('tier') ?? 'free',
     series,
     character,
-    data.get('x_thread_url')?.toString() || null
+    subject,
+    audienceInFiction,
+    sourceSeed
   )
 
-  return NextResponse.redirect(new URL('/admin', req.url))
+  return NextResponse.redirect(redirectTarget(req, '/admin'), { status: 303 })
 }

@@ -3,6 +3,7 @@ import { getDb } from '@/lib/db'
 import { Content } from '@/types'
 import { notFound } from 'next/navigation'
 import { ReviewControls } from '@/components/admin/ReviewControls'
+import { DeleteContentButton } from '@/components/admin/DeleteContentButton'
 
 export default async function EditContentPage({ params }: { params: Promise<{ id: string }> }) {
   const id = parseInt((await params).id)
@@ -45,7 +46,7 @@ export default async function EditContentPage({ params }: { params: Promise<{ id
               name="title"
               required
               defaultValue={item.title}
-              className="w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
+              className="w-full px-3 py-2 bg-white text-stone-900 placeholder:text-stone-400 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
             />
           </div>
 
@@ -54,7 +55,7 @@ export default async function EditContentPage({ params }: { params: Promise<{ id
             <select
               id="type"
               name="type"
-              className="w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
+              className="w-full px-3 py-2 bg-white text-stone-900 placeholder:text-stone-400 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
               defaultValue={item.type}
             >
               <option value="post">Post (Short-form)</option>
@@ -67,7 +68,7 @@ export default async function EditContentPage({ params }: { params: Promise<{ id
             <select
               id="tier"
               name="tier"
-              className="w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
+              className="w-full px-3 py-2 bg-white text-stone-900 placeholder:text-stone-400 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
               defaultValue={item.tier}
             >
               <option value="free">Free (Public)</option>
@@ -80,7 +81,7 @@ export default async function EditContentPage({ params }: { params: Promise<{ id
             <select
               id="series"
               name="series"
-              className="w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
+              className="w-full px-3 py-2 bg-white text-stone-900 placeholder:text-stone-400 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
               defaultValue={item.series || ''}
             >
               <option value="">(none)</option>
@@ -91,32 +92,21 @@ export default async function EditContentPage({ params }: { params: Promise<{ id
             </select>
           </div>
 
+          {/* Ticket 5: character options renamed to beacon/static */}
           <div>
-            <label htmlFor="character" className="block text-sm font-medium text-stone-700 mb-1">Character</label>
+            <label htmlFor="character" className="block text-sm font-medium text-stone-700 mb-1">Character (Narrator Voice)</label>
             <select
               id="character"
               name="character"
-              className="w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
+              className="w-full px-3 py-2 bg-white text-stone-900 placeholder:text-stone-400 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
               defaultValue={item.character || ''}
             >
               <option value="">—none—</option>
-              <option value="pelican">Pelican</option>
-              <option value="gremlin">Gremlin</option>
+              <option value="beacon">Beacon</option>
+              <option value="static">Static</option>
               <option value="zclaude">zClaude</option>
               <option value="ag">A.G.</option>
             </select>
-          </div>
-
-          <div>
-            <label htmlFor="x_thread_url" className="block text-sm font-medium text-stone-700 mb-1">X Thread URL</label>
-            <input
-              type="url"
-              id="x_thread_url"
-              name="x_thread_url"
-              defaultValue={item.x_thread_url || ''}
-              className="w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
-              placeholder="https://x.com/..."
-            />
           </div>
 
           <div className="md:col-span-2">
@@ -126,7 +116,47 @@ export default async function EditContentPage({ params }: { params: Promise<{ id
               name="excerpt"
               rows={3}
               defaultValue={item.excerpt || ''}
-              className="w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
+              className="w-full px-3 py-2 bg-white text-stone-900 placeholder:text-stone-400 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
+            />
+          </div>
+
+          {/* Ticket 5: new Static's Report metadata fields */}
+          <div>
+            <label htmlFor="subject" className="block text-sm font-medium text-stone-700 mb-1">Subject</label>
+            <input
+              type="text"
+              id="subject"
+              name="subject"
+              defaultValue={item.subject || ''}
+              className="w-full px-3 py-2 bg-white text-stone-900 placeholder:text-stone-400 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
+              placeholder="e.g. Ernest, zClaude, Jules…"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="audience_in_fiction" className="block text-sm font-medium text-stone-700 mb-1">Audience (In-Fiction)</label>
+            <select
+              id="audience_in_fiction"
+              name="audience_in_fiction"
+              className="w-full px-3 py-2 bg-white text-stone-900 placeholder:text-stone-400 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
+              defaultValue={item.audience_in_fiction || ''}
+            >
+              <option value="">—none—</option>
+              <option value="beacon">Beacon</option>
+            </select>
+          </div>
+
+          <div className="md:col-span-2">
+            <label htmlFor="source_seed" className="block text-sm font-medium text-stone-700 mb-1">
+              Source Seed <span className="font-normal text-stone-400">(audit trail — filename of the Story Seed)</span>
+            </label>
+            <input
+              type="text"
+              id="source_seed"
+              name="source_seed"
+              defaultValue={item.source_seed || ''}
+              className="w-full px-3 py-2 bg-white text-stone-900 placeholder:text-stone-400 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500"
+              placeholder="e.g. seed_ernestofgaia-secretary-booking_2026-05-26.md"
             />
           </div>
 
@@ -138,7 +168,7 @@ export default async function EditContentPage({ params }: { params: Promise<{ id
               required
               rows={20}
               defaultValue={item.body}
-              className="w-full px-3 py-2 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500 font-mono text-sm"
+              className="w-full px-3 py-2 bg-white text-stone-900 placeholder:text-stone-400 border border-stone-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-stone-500 focus:border-stone-500 font-mono text-sm"
             />
           </div>
         </div>
@@ -150,7 +180,7 @@ export default async function EditContentPage({ params }: { params: Promise<{ id
         <button type="submit" name="action" value="draft" className="hidden" aria-hidden="true" tabIndex={-1} />
 
         <div className="flex items-center justify-between pt-4 border-t border-stone-200">
-          <div />
+          <DeleteContentButton id={item.id} title={item.title} />
           <div className="flex items-center gap-4">
             <button
               type="submit"
@@ -166,7 +196,7 @@ export default async function EditContentPage({ params }: { params: Promise<{ id
               value="publish"
               className="px-4 py-2 text-sm font-medium text-white bg-stone-900 border border-transparent rounded-md shadow-sm hover:bg-stone-800 focus:outline-none focus:ring-2 focus:ring-stone-900"
             >
-              Update & Publish
+              Update &amp; Publish
             </button>
           </div>
         </div>
@@ -177,6 +207,8 @@ export default async function EditContentPage({ params }: { params: Promise<{ id
         currentStatus={item.status}
         reviewNotes={item.review_notes}
         author={item.author}
+        subject={item.subject}
+        sourceSeed={item.source_seed}
       />
     </main>
   )

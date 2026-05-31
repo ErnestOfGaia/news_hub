@@ -19,7 +19,6 @@ interface DraftPayload {
   excerpt?: unknown
   type?: unknown
   series?: unknown
-  x_thread_url?: unknown
 }
 
 export async function POST(req: NextRequest) {
@@ -43,11 +42,6 @@ export async function POST(req: NextRequest) {
   const excerpt =
     typeof payload.excerpt === 'string' && payload.excerpt.trim()
       ? payload.excerpt.trim()
-      : null
-
-  const xThreadUrl =
-    typeof payload.x_thread_url === 'string' && payload.x_thread_url.trim()
-      ? payload.x_thread_url.trim()
       : null
 
   let type: ContentType = 'post'
@@ -83,10 +77,10 @@ export async function POST(req: NextRequest) {
     const result = db
       .prepare(
         `INSERT INTO content
-           (slug, title, body, excerpt, type, tier, series, x_thread_url, status, author)
-         VALUES (?, ?, ?, ?, ?, 'free', ?, ?, 'pending_review', 'hermes')`
+           (slug, title, body, excerpt, type, tier, series, status, author)
+         VALUES (?, ?, ?, ?, ?, 'free', ?, 'pending_review', 'hermes')`
       )
-      .run(slug, title, body, excerpt, type, series, xThreadUrl)
+      .run(slug, title, body, excerpt, type, series)
 
     const id = Number(result.lastInsertRowid)
     return NextResponse.json({ id, adminUrl: `/admin/${id}` }, { status: 201 })

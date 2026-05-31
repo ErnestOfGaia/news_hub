@@ -34,7 +34,6 @@ function initSchema(db: Database.Database): void {
       type          TEXT NOT NULL DEFAULT 'post',
       tier          TEXT NOT NULL DEFAULT 'free',
       series        TEXT,
-      x_thread_url  TEXT,
       created_at    TEXT NOT NULL DEFAULT (datetime('now')),
       updated_at    TEXT NOT NULL DEFAULT (datetime('now'))
     );
@@ -64,10 +63,42 @@ function initSchema(db: Database.Database): void {
     db.exec("ALTER TABLE content ADD COLUMN published_at TEXT")
   }
 
+  // Ticket 1 — 2026-05-28: three new nullable columns for Static's Report frame.
+  // subject: free-form named subject of the article (e.g. 'Ernest', 'zClaude')
+  if (!columnNames.includes('subject')) {
+    db.exec("ALTER TABLE content ADD COLUMN subject TEXT")
+  }
+  // audience_in_fiction: 'beacon' | null — always 'beacon' for Build Log
+  if (!columnNames.includes('audience_in_fiction')) {
+    db.exec("ALTER TABLE content ADD COLUMN audience_in_fiction TEXT")
+  }
+  // source_seed: filename of the Story Seed this article derives from (audit trail)
+  if (!columnNames.includes('source_seed')) {
+    db.exec("ALTER TABLE content ADD COLUMN source_seed TEXT")
+  }
+
+  // Ticket 1 — 2026-05-28: rename character enum values.
+  // pelican → beacon, gremlin → static (approved by Trewkat through end of 2027).
+  // Each UPDATE is guarded — checks for existence of old value first so re-runs are no-ops.
+  const hasPelican = (db.prepare("SELECT 1 FROM content WHERE character = 'pelican' LIMIT 1").get() !== undefined)
+  if (hasPelican) {
+    db.prepare("UPDATE content SET character = 'beacon' WHERE character = 'pelican'").run()
+  }
+  const hasGremlin = (db.prepare("SELECT 1 FROM content WHERE character = 'gremlin' LIMIT 1").get() !== undefined)
+  if (hasGremlin) {
+    db.prepare("UPDATE content SET character = 'static' WHERE character = 'gremlin'").run()
+  }
+
   // Backfill status from legacy `published` flag, then drop the column.
   // Both operations are guarded so they only run on DBs that still have it.
   if (columnNames.includes('published')) {
     db.prepare("UPDATE content SET status = 'published' WHERE published = 1 AND status = 'draft'").run()
     db.exec("ALTER TABLE content DROP COLUMN published")
+  }
+
+  // x_thread_url removed 2026-05-31: the site uses LinkedIn, so the field was
+  // dropped from the admin forms. Guarded so it only runs where the column exists.
+  if (columnNames.includes('x_thread_url')) {
+    db.exec("ALTER TABLE content DROP COLUMN x_thread_url")
   }
 }
